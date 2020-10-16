@@ -12,8 +12,14 @@ app.use(express.urlencoded({
 }))
 
 app.get('/', (req, res) => {
-    username = null;
-    res.redirect('/login');
+    if(username == null){
+        res.redirect('/login');
+    }else{
+        res.render('index', {
+            title: 'Home page',
+            value: username
+        });
+    }
 });
 
 app.get('/login', (req, res) => {
