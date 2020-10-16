@@ -70,18 +70,17 @@ body
             a(class=aClasses href="/" role="button") Logout
 ```
 
-- Trong file app.js khai báo đoạn code mới để khi truy cập url http://localhost:3000/home thì hiển thị nội dung màn hình home lên trình duyệt
+- Khi người dùng truy cập trang web, mặc định sẽ hiển thị màn hình login. Thêm đoạn code sau vào file app.js
 
 ```h
 app.get('/home', (req, res) => {    
-    if (username == null) {
-        res.redirect('/login');
-    } else {
-        res.render('index', {
-            title: 'Home page',
-            value: username
-        });
-    }
+    res.redirect('/login');
+});
+
+app.get('/login', (req, res) => {
+    res.render('users/login', {
+        title: 'login form'
+    });
 });
 ```
 
@@ -123,3 +122,29 @@ html
                     p(class=pClass) Copy right 2020
                     
 ```
+
+- Khi người dùng bấm nút đăng nhập. Di chuyển đến màn hình home, và hiển thị thông tin đăng nhập lên màn hình
+
+```h
+app.post('/login', function (req, res) {
+    username = req.body.username;
+    res.redirect('/home');
+});
+```
+
+## Usage
+- Sau khi clone code từ git chạy lệnh cài đặt các module cần thiết
+
+```
+$ npm install
+```
+- Chạy chương trình bằng lệnh.
+```
+$ npm start
+```
+hoặc
+```
+$ node app.js
+```
+
+- Mở trình duyệt với url http://localhost:3000 để xem kết quả

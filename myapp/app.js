@@ -12,14 +12,7 @@ app.use(express.urlencoded({
 }))
 
 app.get('/', (req, res) => {
-    if(username == null){
-        res.redirect('/login');
-    }else{
-        res.render('index', {
-            title: 'Home page',
-            value: username
-        });
-    }
+    res.redirect('/login');
 });
 
 app.get('/login', (req, res) => {
@@ -43,3 +36,7 @@ app.post('/login', function (req, res) {
     username = req.body.username;
     res.redirect('/home');
 });
+
+app.listen(port, () => {
+    console.log(`Example app listening at http://localhost:${port}`)
+  })
