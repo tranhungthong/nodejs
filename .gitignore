@@ -1,1 +1,3 @@
 myapp/node_modules/*
+myapp/dist/*
+.vscode/settings.json
