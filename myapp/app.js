@@ -37,7 +37,3 @@ app.post('/login', function (req, res) {
     username = req.body.username;
     res.redirect('/home');
 });
-
-app.listen(port, () => {
-    console.log(`Example app listening at http://localhost:${port}`)
-})
