@@ -19,19 +19,12 @@ app.use(express.static(__dirname + '/public'));
 
 
 app.use(express.urlencoded({
-    extended: true     // de doc duoc json request can import cai nay
+    extended: true
 }))
 
 app.get('/', (req, res) => {
     res.redirect('/auth/login');
 });
-
-// app.get('/login', (req, res) => {
-//     res.render('users/login', {
-//         title: 'login form',
-//         layout:'./layouts/empty'
-//     });
-// });
 
 app.get('/home', (req, res) => {
     res.render('index', {
@@ -39,11 +32,6 @@ app.get('/home', (req, res) => {
         value: username
     });
 });
-
-// app.post('/login', function (req, res) {
-//     username = req.body.username;
-//     res.redirect('/home');
-// });
 
 app.use('/auth', loginRoute);
 
