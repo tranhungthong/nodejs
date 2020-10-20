@@ -3,6 +3,7 @@ const expressLayouts = require('express-ejs-layouts')
 var path = require('path');
 const app = express();
 const port = 3000;
+var loginRoute = require('./routes/auth.route');
 
 var username = null;
 
@@ -22,31 +23,29 @@ app.use(express.urlencoded({
 }))
 
 app.get('/', (req, res) => {
-    res.redirect('/login');
+    res.redirect('/auth/login');
 });
 
-app.get('/login', (req, res) => {
-    res.render('users/login', {
-        title: 'login form',
-        layout:'./layouts/empty'
+// app.get('/login', (req, res) => {
+//     res.render('users/login', {
+//         title: 'login form',
+//         layout:'./layouts/empty'
+//     });
+// });
+
+app.get('/home', (req, res) => {
+    res.render('index', {
+        title: 'Home page',
+        value: username
     });
 });
 
-app.get('/home', (req, res) => {
-    if (username == null) {
-        res.redirect('/login');
-    } else {
-        res.render('index', {
-            title: 'Home page',
-            value: username
-        });
-    }
-});
+// app.post('/login', function (req, res) {
+//     username = req.body.username;
+//     res.redirect('/home');
+// });
 
-app.post('/login', function (req, res) {
-    username = req.body.username;
-    res.redirect('/home');
-});
+app.use('/auth', loginRoute);
 
 app.listen(port, () => {
     console.log(`Example app listening at http://localhost:${port}`)

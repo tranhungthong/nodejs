@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "node app.js",
+    "start": "nodemon --inspect app.js",
     "build:css": "npx tailwindcss build ./public/stylesheets/tailwind.css -o ./public/stylesheets/style.css"
   },
   "author": "",
@@ -16,7 +16,7 @@
     "pug": "^3.0.0"
   },
   "devDependencies": {
-    "nodemon": "^2.0.5",
+    "nodemon": "^2.0.6",
     "tailwindcss": "^1.9.4"
   }
 }
