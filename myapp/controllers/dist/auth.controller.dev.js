@@ -30,12 +30,21 @@ module.exports.postLogin = function (req, res) {
       res.cookie('userid', foundData[0]._id, {
         signed: true
       });
-      res.redirect('/home');
+      res.redirect('/');
     }
 
     res.render('users/login', {
       layout: '../views/layouts/empty',
       errors: ['Email or password not correct.']
     });
+  });
+};
+
+module.exports.logout = function (req, res) {
+  res.clearCookie('userid');
+  res.render('users/login', {
+    title: 'login form',
+    layout: '../views/layouts/empty',
+    errors: null
   });
 };

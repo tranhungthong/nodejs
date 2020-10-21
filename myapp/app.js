@@ -26,11 +26,7 @@ app.use(express.urlencoded({
 
 app.use(cookieParser(process.env.SESSION_SECRET));
 
-app.get('/', (req, res) => {
-    res.redirect('/auth/login');
-});
-
-app.get('/home', authMiddleware.requireAuth, (req, res) => {
+app.get('/', authMiddleware.requireAuth, (req, res) => {
     res.render('index', {
         title: 'Home page'
     });

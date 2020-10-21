@@ -29,7 +29,7 @@ module.exports.postLogin = function (req, res) {
                 signed: true
             });
 
-            res.redirect('/home');
+            res.redirect('/');
         }
 
         res.render('users/login', {
@@ -38,5 +38,15 @@ module.exports.postLogin = function (req, res) {
                 'Email or password not correct.'
             ]
         });
+    });
+};
+
+module.exports.logout = function (req, res) {
+    res.clearCookie('userid');
+
+    res.render('users/login', {
+        title: 'login form',
+        layout: '../views/layouts/empty',
+        errors: null
     });
 };
