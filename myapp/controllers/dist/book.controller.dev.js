@@ -4,17 +4,12 @@ var Book = require('../models/book.model');
 
 module.exports.index = function (req, res) {
   // get data
-  Book.find({}, function (err, data) {
-    if (data.length > 0) {
-      console.log(data);
-      res.render('books/index', {
-        books: data
-      });
-      return;
-    }
+  LoadData();
+};
 
-    res.render('books/index');
-  });
+module.exports.add = function (req, res) {
+  console.log(req.body);
+  return null;
 };
 
 module.exports.search = function (req, res) {
@@ -31,8 +26,6 @@ module.exports.search = function (req, res) {
       }
     }]
   }, function (err, data) {
-    console.log(data);
-
     if (data.length > 0) {
       res.render('books/index', {
         books: data
@@ -45,3 +38,19 @@ module.exports.search = function (req, res) {
     });
   });
 };
+
+
+function LoadData() {
+  Book.find({}, function (err, data) {
+    if (data.length > 0) {
+      res.render('books/index', {
+        books: data
+      });
+      return;
+    }
+
+    res.render('books/index', {
+      books: null
+    });
+  });
+}

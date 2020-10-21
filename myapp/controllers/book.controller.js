@@ -4,8 +4,6 @@ module.exports.index = function (req, res) {
     // get data
     Book.find({}, function (err, data) {
         if (data.length > 0) {
-            console.log(data);
-
             res.render('books/index', {
                 books: data
             });
@@ -15,8 +13,11 @@ module.exports.index = function (req, res) {
 
         res.render('books/index');
     });
+};
 
-
+module.exports.add = function (req, res) {
+    console.log(req);
+    res.render('books/index');
 };
 
 module.exports.search = function (req, res) {
@@ -29,7 +30,6 @@ module.exports.search = function (req, res) {
             { author: { $regex: new RegExp(input, "i") } }
         ]
     }, function (err, data) {
-        console.log(data);
         if (data.length > 0) {
             res.render('books/index', {
                 books: data
