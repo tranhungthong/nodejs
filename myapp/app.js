@@ -1,4 +1,5 @@
 const express = require('express');
+require('./database');
 const expressLayouts = require('express-ejs-layouts')
 var path = require('path');
 const app = express();
@@ -34,6 +35,7 @@ app.get('/home', (req, res) => {
 });
 
 app.use('/auth', loginRoute);
+
 
 app.listen(port, () => {
     console.log(`Example app listening at http://localhost:${port}`)
