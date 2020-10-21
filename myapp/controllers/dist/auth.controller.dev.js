@@ -27,6 +27,9 @@ module.exports.postLogin = function (req, res) {
     password: password
   }, function (err, foundData) {
     if (foundData.length > 0) {
+      res.cookie('userid', foundData[0]._id, {
+        signed: true
+      });
       res.redirect('/home');
     }
 
