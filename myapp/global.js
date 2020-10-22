@@ -3,7 +3,8 @@ var global = {
         status: "200",
         type: "success",
         description: "正常",
-        description_sub: ""
+        description_sub: "",
+        data: null
     },
     error: {
         status: "200",

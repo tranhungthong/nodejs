@@ -100,6 +100,34 @@ function ValidateBook(book) {
   return msg;
 }
 
+module.exports.getABook = function _callee3(req, res) {
+  return regeneratorRuntime.async(function _callee3$(_context3) {
+    while (1) {
+      switch (_context3.prev = _context3.next) {
+        case 0:
+          _context3.next = 2;
+          return regeneratorRuntime.awrap(Book.find({
+            _id: req.query.id
+          }, function (err, data) {
+            if (data != null && data.length > 0) {
+              globals.success.data = data;
+              res.json(globals.success);
+              return;
+            }
+          }));
+
+        case 2:
+          globals.success.data = null;
+          res.json(globals.success);
+
+        case 4:
+        case "end":
+          return _context3.stop();
+      }
+    }
+  });
+};
+
 module.exports.search = function (req, res) {
   // get data
   var input = '^.*' + req.body.search + '.*';

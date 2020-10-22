@@ -67,6 +67,21 @@ function ValidateBook(book) {
     return msg;
 }
 
+module.exports.getABook = async function (req, res) {
+    // validate    
+
+    await Book.find({ _id: req.query.id }, function (err, data) {
+        if (data != null && data.length > 0) {
+            globals.success.data = data;
+            res.json(globals.success);
+            return;
+        }
+    });
+
+    globals.success.data = null;
+    res.json(globals.success);
+};
+
 module.exports.search = function (req, res) {
     // get data
     var input = '^.*' + req.body.search + '.*';
