@@ -1,3 +1,78 @@
+<!--Regular Datatables CSS-->
+<link href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" rel="stylesheet">
+<!--Responsive Extension Datatables CSS-->
+<link href="https://cdn.datatables.net/responsive/2.2.3/css/responsive.dataTables.min.css" rel="stylesheet">
+<!--Button Extension Datatables CSS-->
+<link rel="stylesheet" href="https://cdn.datatables.net/buttons/1.6.4/css/buttons.dataTables.min.css">
+<style>
+    /* Overrides to match the Tailwind CSS */
+
+    .dataTables_wrapper {
+        padding-top: 0.25rem;
+        padding-bottom: 0.25rem
+    }
+
+    table.dataTable.no-footer {
+        border-bottom-width: 1px;
+        border-color: #fafafa;
+    }
+
+    .dataTables_wrapper .dataTables_paginate {
+        padding: 1rem
+    }
+
+    table.dataTable thead tr th {
+        background-color: #fafafa;
+        border-bottom-width: 1px;
+        border-top-width: 1px;
+        border-color: rgb(232, 232, 232)
+    }
+
+    .dataTables_wrapper .dataTables_paginate .paginate_button.current:not(.disabled),
+    .dataTables_wrapper .dataTables_paginate .paginate_button.next:not(.disabled),
+    .dataTables_wrapper .dataTables_paginate .paginate_button.previous:not(.disabled),
+    .dataTables_wrapper .dataTables_paginate .paginate_button:not(.disabled),
+    button.dt-button {
+        transition-duration: 150ms;
+        transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+        transition-property: background-color, border-color, color, fill, stroke, opacity, box-shadow, transform;
+        letter-spacing: 0.1em;
+        text-transform: uppercase;
+        color: #374151 !important;
+        box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+        font-size: 0.75rem;
+        font-weight: 600;
+        align-items: center;
+        display: inline-flex;
+        border-width: 1px !important;
+        border-color: #d2d6dc !important;
+        border-radius: 0.375rem;
+        background: #ffffff;
+        overflow: visible;
+        margin-bottom: 0
+    }
+
+    .dataTables_wrapper .dataTables_paginate .paginate_button.next:focus:not(.disabled),
+    .dataTables_wrapper .dataTables_paginate .paginate_button.next:hover:not(.disabled),
+    .dataTables_wrapper .dataTables_paginate .paginate_button.previous:focus:not(.disabled),
+    .dataTables_wrapper .dataTables_paginate .paginate_button.previous:hover:not(.disabled),
+    .dataTables_wrapper .dataTables_paginate .paginate_button:focus:not(.disabled),
+    .dataTables_wrapper .dataTables_paginate .paginate_button:hover:not(.disabled),
+    button.dt-button:focus,
+    button.dt-button:focus:not(.disabled),
+    button.dt-button:hover,
+    button.dt-button:hover:not(.disabled) {
+        background-color: #edf2f7 !important;
+        border-width: 1px !important;
+        border-color: #d2d6dc !important;
+        color: #374151 !important
+    }
+
+    .dataTables_wrapper .dataTables_paginate .paginate_button.current:not(.disabled) {
+        color: rgb(29, 165, 122) !important;
+        border-color: rgb(29, 165, 122) !important;
+    }
+</style>
 <div class="w-full mt-5 ml-5 mb-5 mr-5">
     <div class="grid grid-cols-1">
         <p class="text-2xl">Book list</p>
@@ -27,8 +102,8 @@
         </div>
     </div>
     <div class="-mx-4 sm:-mx-8 px-4 sm:px-8 py-4 overflow-x-auto">
-        <div class="inline-block min-w-full shadow rounded-lg overflow-hidden">
-            <table class="min-w-full leading-normal mr-4">
+        <div class="inline-block min-w-full rounded-lg overflow-hidden">
+            <table id="grBook" class="min-w-full leading-normal mr-4">
                 <thead>
                     <tr>
                         <th
@@ -102,3 +177,17 @@
 </div>
 
 <%- include ('book_dialog.ejs') %>
+<script type="text/javascript"
+    src="https://cdn.datatables.net/v/dt/jszip-2.5.0/dt-1.10.22/b-1.6.4/b-flash-1.6.4/b-html5-1.6.4/b-print-1.6.4/datatables.min.js"></script>
+<script>
+    $(document).ready(function () {
+        // add class
+        let table = $('#grBook').DataTable({
+            "searching": false,
+            "lengthChange": false,
+            "info": false
+        }).columns.adjust().responsive.recalc();
+
+
+    });
+</script>
