@@ -210,14 +210,16 @@
 <script type="text/javascript"
     src="https://cdn.datatables.net/v/dt/jszip-2.5.0/dt-1.10.22/b-1.6.4/b-flash-1.6.4/b-html5-1.6.4/b-print-1.6.4/datatables.min.js"></script>
 <script>
-    $(document).ready(function () {
-        var currentId = '';
+    $(document).ready(function () {        
         // add class
         let table = $('#grBook').DataTable({
             "searching": false,
             "lengthChange": false,
             "info": false
-        });
+        });       
+    });
+
+    var currentId = '';
 
         function deleteCallback(val) {
             if (val == true) {
@@ -229,7 +231,7 @@
                     url: '/book/delete',
                     success: function (res) {
                         if (res.type == "success") {
-                            toggleModal();
+                            toggleModalConfirm();
                             $('#btnSearch').trigger('click');
                         } else {
                             $('#dmess').show();
@@ -240,11 +242,12 @@
             }
         }
 
-        $('.book-delete').each(function () {
-            $(this).click(function () {
-                currentId = $(this).data('id');
-                toggleModalConfirm("Are you sure delete this book.", deleteCallback)
-            });
-        });
-    });
+    var editmodal = document.querySelectorAll('.book-delete')
+    for (var i = 0; i < editmodal.length; i++) {
+        editmodal[i].addEventListener('click', function (event) {
+            event.preventDefault()
+            currentId = $(this).data('id');
+            toggleModalConfirm("Are you sure delete this book.", deleteCallback)
+        })
+    }
 </script>

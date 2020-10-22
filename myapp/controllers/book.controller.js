@@ -5,7 +5,7 @@ var globals = require('../global')
 
 module.exports.index = async function (req, res) {
     // get data
-    await Book.find({}, function (err, data) {
+    await Book.find({ is_del: false }, function (err, data) {
         if (data.length > 0) {
             res.render('books/index', {
                 books: data,
@@ -105,7 +105,7 @@ module.exports.delete = async function (req, res) {
     var book = await Book.findOne({ _id: req.body.id }, function (err, data) {
         var aaa = 1;
     });
-    
+
     book.is_del = true;
     book.update_date = dateFormat(now, "yyyy/MM/dd");
     book.update_by = req.signedCookies.userid;
@@ -139,10 +139,17 @@ module.exports.search = function (req, res) {
     var input = '^.*' + req.body.search + '.*';
 
     Book.find({
-        $or: [
-            { title: { $regex: new RegExp(input, "i") } },
-            { author: { $regex: new RegExp(input, "i") } }
+        $and: [
+            {
+                $or: [
+                    { title: { $regex: new RegExp(input, "i") } },
+                    { author: { $regex: new RegExp(input, "i") } }
+                ]
+            }, {
+                is_del: false
+            }
         ]
+
     }, function (err, data) {
         if (data.length > 0) {
             res.render('books/index', {

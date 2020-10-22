@@ -12,7 +12,9 @@ module.exports.index = function _callee(req, res) {
       switch (_context.prev = _context.next) {
         case 0:
           _context.next = 2;
-          return regeneratorRuntime.awrap(Book.find({}, function (err, data) {
+          return regeneratorRuntime.awrap(Book.find({
+            is_del: false
+          }, function (err, data) {
             if (data.length > 0) {
               res.render('books/index', {
                 books: data,
@@ -224,14 +226,18 @@ module.exports.search = function (req, res) {
   // get data
   var input = '^.*' + req.body.search + '.*';
   Book.find({
-    $or: [{
-      title: {
-        $regex: new RegExp(input, "i")
-      }
+    $and: [{
+      $or: [{
+        title: {
+          $regex: new RegExp(input, "i")
+        }
+      }, {
+        author: {
+          $regex: new RegExp(input, "i")
+        }
+      }]
     }, {
-      author: {
-        $regex: new RegExp(input, "i")
-      }
+      is_del: false
     }]
   }, function (err, data) {
     if (data.length > 0) {
