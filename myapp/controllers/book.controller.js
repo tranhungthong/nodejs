@@ -42,14 +42,14 @@ module.exports.add = async function (req, res) {
 
     if (valid != '') {
         globals.error.description = valid;
-        res.send(globals.result);
+        res.json(globals.error);
         return;
     }
 
     await book.save(function (err) {
         if (err) {
             globals.error.description = err;
-            res.send(globals.error);
+            res.json(globals.error);
             return;
         }
     })
