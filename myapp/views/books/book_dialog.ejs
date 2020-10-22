@@ -19,10 +19,13 @@
             </div>
             <!--Body-->
             <div class="px-6 py-4">
+                <div id="dmess" class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-2 hidden" role="alert">
+                    <p id="message_error"></p>
+                </div>
                 <div class="md:flex md:items-center mb-6">
                     <div class="md:w-1/5">
                         <label class="block sm:text-sm md:text-right mb-1 md:mb-0 pr-4" for="book_title">
-                            Title
+                            Title<span class="text-red-900">*</span>
                         </label>
                     </div>
                     <div class="md:w-4/5">
@@ -129,7 +132,7 @@
             data.author = $('#book_author').val();
             data.summary = $('#book_summary').val();
             data.message = $('#book_message').val();
-            data.genre = $('#book_genre').val();
+            data.genre = $('#book_genre').val();            
 
             $.ajax({
                 type: 'POST',
@@ -137,13 +140,14 @@
                 contentType: 'application/json',
                 url: '/book/add',
                 success: function (res) {
-                    if(res.type="success"){
+                    if (res.type == "success") {
                         toggleModal();
                         $('#btnSearch').trigger('click');
-                    }else{
-
+                    } else {
+                        $('#dmess').show();
+                        $('#message_error').html(res.description);
                     }
-                    
+
                 }
             });
         });

@@ -35,11 +35,12 @@ module.exports.index = function _callee(req, res) {
 };
 
 module.exports.add = function _callee2(req, res) {
-  var now, book;
+  var now, book, valid;
   return regeneratorRuntime.async(function _callee2$(_context2) {
     while (1) {
       switch (_context2.prev = _context2.next) {
         case 0:
+          // validate    
           now = new Date();
           book = new Book({
             title: req.body.title,
@@ -55,26 +56,47 @@ module.exports.add = function _callee2(req, res) {
             update_by: req.signedCookies.userid,
             is_del: false
           });
-          _context2.next = 4;
+          valid = ValidateBook(book);
+
+          if (!(valid != '')) {
+            _context2.next = 7;
+            break;
+          }
+
+          globals.error.description = valid;
+          res.send(globals.result);
+          return _context2.abrupt("return");
+
+        case 7:
+          _context2.next = 9;
           return regeneratorRuntime.awrap(book.save(function (err) {
             if (err) {
-              globals.result.status = "error";
-              globals.result.description = err;
-              res.send(globals.result);
+              globals.error.description = err;
+              res.send(globals.error);
               return;
             }
           }));
 
-        case 4:
-          res.json(globals.result);
+        case 9:
+          res.json(globals.success);
 
-        case 5:
+        case 10:
         case "end":
           return _context2.stop();
       }
     }
   });
 };
+
+function ValidateBook(book) {
+  var msg = '';
+
+  if (!book.title) {
+    msg += 'Title is required.';
+  }
+
+  return msg;
+}
 
 module.exports.search = function (req, res) {
   // get data

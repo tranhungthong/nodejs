@@ -19,6 +19,8 @@ module.exports.index = async function (req, res) {
 };
 
 module.exports.add = async function (req, res) {
+    // validate    
+
     var now = new Date();
 
     var book = new Book({
@@ -36,17 +38,33 @@ module.exports.add = async function (req, res) {
         is_del: false
     });
 
+    var valid = ValidateBook(book);
+
+    if (valid != '') {
+        globals.error.description = valid;
+        res.send(globals.result);
+        return;
+    }
+
     await book.save(function (err) {
         if (err) {
-            globals.result.status = "error";
-            globals.result.description = err;
-            res.send(globals.result);
+            globals.error.description = err;
+            res.send(globals.error);
             return;
         }
     })
 
-    res.json(globals.result);
+    res.json(globals.success);
 };
+
+function ValidateBook(book) {
+    var msg = '';
+    if (!book.title) {
+        msg += 'Title is required.'
+    }
+
+    return msg;
+}
 
 module.exports.search = function (req, res) {
     // get data
