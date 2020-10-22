@@ -17,71 +17,70 @@
                     </svg>
                 </div>
             </div>
-            <form method="POST" action="/book/add">
-                <!--Body-->
-                <div class="px-6 py-4">
-                    <div class="md:flex md:items-center mb-6">
-                        <div class="md:w-1/5">
-                            <label class="block sm:text-sm md:text-right mb-1 md:mb-0 pr-4" for="book_title">
-                                Title
-                            </label>
-                        </div>
-                        <div class="md:w-4/5">
-                            <input
-                                class="transition duration-500 appearance-none block w-full bg-white-200 sm:text-sm border border-gray-400 rounded py-2 px-4 leading-tight focus:outline-none focus:bg-white focus:border-teal-500 focus:shadow-inner hover:border-teal-500"
-                                id="book_title" name="book_title" type="text">
-                        </div>
+            <!--Body-->
+            <div class="px-6 py-4">
+                <div class="md:flex md:items-center mb-6">
+                    <div class="md:w-1/5">
+                        <label class="block sm:text-sm md:text-right mb-1 md:mb-0 pr-4" for="book_title">
+                            Title
+                        </label>
                     </div>
-                    <div class="md:flex md:items-center mb-6">
-                        <div class="md:w-1/5">
-                            <label class="block sm:text-sm md:text-right mb-1 md:mb-0 pr-4" for="book_author">
-                                Author
-                            </label>
-                        </div>
-                        <div class="md:w-4/5">
-                            <input
-                                class="transition duration-500 appearance-none block w-full bg-white-200 sm:text-sm border border-gray-400 rounded py-2 px-4 leading-tight focus:outline-none focus:bg-white focus:border-teal-500 focus:shadow-inner hover:border-teal-500"
-                                id="book_author" name="book_author" type="text">
-                        </div>
+                    <div class="md:w-4/5">
+                        <input
+                            class="transition duration-500 appearance-none block w-full bg-white-200 sm:text-sm border border-gray-400 rounded py-2 px-4 leading-tight focus:outline-none focus:bg-white focus:border-teal-500 focus:shadow-inner hover:border-teal-500"
+                            id="book_title" name="book_title" type="text">
                     </div>
-                    <div class="md:flex md:items-center mb-6">
-                        <div class="md:w-1/5">
-                            <label class="block sm:text-sm md:text-right mb-1 md:mb-0 pr-4" for="book_summary">
-                                Summary
-                            </label>
-                        </div>
-                        <div class="md:w-4/5">
-                            <input
-                                class="transition duration-500 appearance-none block w-full bg-white-200 sm:text-sm border border-gray-400 rounded py-2 px-4 leading-tight focus:outline-none focus:bg-white focus:border-teal-500 focus:shadow-inner hover:border-teal-500"
-                                id="book_summary" name="book_summary" type="text">
-                        </div>
+                </div>
+                <div class="md:flex md:items-center mb-6">
+                    <div class="md:w-1/5">
+                        <label class="block sm:text-sm md:text-right mb-1 md:mb-0 pr-4" for="book_author">
+                            Author
+                        </label>
                     </div>
-                    <div class="md:flex md:items-center mb-6">
-                        <div class="md:w-1/5">
-                            <label class="block sm:text-sm md:text-right mb-1 md:mb-0 pr-4" for="book_genre">
-                                Genre
-                            </label>
-                        </div>
-                        <div class="md:w-4/5">
-                            <select id="book_genre" name="book_genre"
-                                class="transition duration-500 mt-1 block form-select w-full py-2 px-3 border border-gray-400 bg-white rounded-md shadow-sm focus:outline-none focus:shadow-outline-blue focus:border-teal-500 transition duration-150 ease-in-out sm:text-sm sm:leading-5 hover:border-teal-500">
-                                <option>United States</option>
-                                <option>Canada</option>
-                                <option>Mexico</option>
-                            </select>
-                        </div>
+                    <div class="md:w-4/5">
+                        <input
+                            class="transition duration-500 appearance-none block w-full bg-white-200 sm:text-sm border border-gray-400 rounded py-2 px-4 leading-tight focus:outline-none focus:bg-white focus:border-teal-500 focus:shadow-inner hover:border-teal-500"
+                            id="book_author" name="book_author" type="text">
                     </div>
-
+                </div>
+                <div class="md:flex md:items-center mb-6">
+                    <div class="md:w-1/5">
+                        <label class="block sm:text-sm md:text-right mb-1 md:mb-0 pr-4" for="book_summary">
+                            Summary
+                        </label>
+                    </div>
+                    <div class="md:w-4/5">
+                        <input
+                            class="transition duration-500 appearance-none block w-full bg-white-200 sm:text-sm border border-gray-400 rounded py-2 px-4 leading-tight focus:outline-none focus:bg-white focus:border-teal-500 focus:shadow-inner hover:border-teal-500"
+                            id="book_summary" name="book_summary" type="text">
+                    </div>
+                </div>
+                <div class="md:flex md:items-center mb-6">
+                    <div class="md:w-1/5">
+                        <label class="block sm:text-sm md:text-right mb-1 md:mb-0 pr-4" for="book_genre">
+                            Genre
+                        </label>
+                    </div>
+                    <div class="md:w-4/5">
+                        <select id="book_genre" name="book_genre"
+                            class="transition duration-500 mt-1 block form-select w-full py-2 px-3 border border-gray-400 bg-white rounded-md shadow-sm focus:outline-none focus:shadow-outline-blue focus:border-teal-500 transition duration-150 ease-in-out sm:text-sm sm:leading-5 hover:border-teal-500">
+                            <option>United States</option>
+                            <option>Canada</option>
+                            <option>Mexico</option>
+                        </select>
+                    </div>
                 </div>
 
-                <!--Footer-->
-                <div class="flex justify-end pt-2 border-t border-gray-300">
-                    <button
-                        class="modal-open hover:border-teal-300 text-gray-600 hover:text-teal-600 py-1 px-4 mt-2 mr-2 border border-gray-300 rounded-md focus:outline-none focus:shadow-outline focus:border-blue-300">Close</button>
-                    <button
-                        class="py-1 px-4 mt-2 text-center float-right bg-teal-600 rounded-md text-white text-sm hover:bg-teal-500 focus:outline-none focus:shadow-outline focus:border-blue-300 mr-2">Save</button>
-                </div>
-            </form>
+            </div>
+
+            <!--Footer-->
+            <div class="flex justify-end pt-2 border-t border-gray-300">
+                <button
+                    class="modal-open hover:border-teal-300 text-gray-600 hover:text-teal-600 py-1 px-4 mt-2 mr-2 border border-gray-300 rounded-md focus:outline-none focus:shadow-outline focus:border-blue-300">Close</button>
+                <button
+                    class="py-1 px-4 mt-2 text-center float-right bg-teal-600 rounded-md text-white text-sm hover:bg-teal-500 focus:outline-none focus:shadow-outline focus:border-blue-300 mr-2"
+                    id="btnSave">Save</button>
+            </div>
         </div>
     </div>
 </div>
@@ -121,5 +120,32 @@
         body.classList.toggle('modal-active')
     }
 
+    $(function () {
+        $('#btnSave').click(function (e) {
+            e.preventDefault();
 
+            var data = {};
+            data.title = $('#book_title').val();
+            data.author = $('#book_author').val();
+            data.summary = $('#book_summary').val();
+            data.message = $('#book_message').val();
+            data.genre = $('#book_genre').val();
+
+            $.ajax({
+                type: 'POST',
+                data: JSON.stringify(data),
+                contentType: 'application/json',
+                url: '/book/add',
+                success: function (res) {
+                    if(res.type="success"){
+                        toggleModal();
+                        $('#btnSearch').trigger('click');
+                    }else{
+
+                    }
+                    
+                }
+            });
+        });
+    });
 </script>

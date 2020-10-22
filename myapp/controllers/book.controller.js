@@ -1,8 +1,11 @@
 var Book = require('../models/book.model');
+var dateFormat = require('dateformat');
+var globals = require('../global')
 
-module.exports.index = function (req, res) {
+
+module.exports.index = async function (req, res) {
     // get data
-    Book.find({}, function (err, data) {
+    await Book.find({}, function (err, data) {
         if (data.length > 0) {
             res.render('books/index', {
                 books: data
@@ -10,14 +13,39 @@ module.exports.index = function (req, res) {
 
             return;
         }
-
-        res.render('books/index');
     });
+
+    res.render('books/index', { books: null });
 };
 
-module.exports.add = function (req, res) {
-    console.log(req);
-    res.render('books/index');
+module.exports.add = async function (req, res) {
+    var now = new Date();
+
+    var book = new Book({
+        title: req.body.title,
+        author: req.body.author,
+        summary: req.body.summary,
+        message: req.body.message,
+        genre: req.body.genre,
+        ISBN: '',
+        img_cover: '',
+        create_date: dateFormat(now, "yyyy/MM/dd"),
+        create_by: req.signedCookies.userid,
+        update_date: dateFormat(now, "yyyy/MM/dd"),
+        update_by: req.signedCookies.userid,
+        is_del: false
+    });
+
+    await book.save(function (err) {
+        if (err) {
+            globals.result.status = "error";
+            globals.result.description = err;
+            res.send(globals.result);
+            return;
+        }
+    })
+
+    res.json(globals.result);
 };
 
 module.exports.search = function (req, res) {

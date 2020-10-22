@@ -12,7 +12,8 @@ var userSchema = new mongoose.Schema({
   create_date: String,
   create_by: String,
   update_date: String,
-  update_by: String
+  update_by: String,
+  is_del: Boolean
 });
 var Book = mongoose.model('Book', userSchema, 'Book');
 module.exports = Book;
