@@ -7,5 +7,6 @@ router.get('/get', controller.getABook);
 router.post('/', controller.search);
 router.post('/add', controller.add);
 router.post('/update', controller.update);
+router.post('/delete', controller.delete);
 
 module.exports = router;

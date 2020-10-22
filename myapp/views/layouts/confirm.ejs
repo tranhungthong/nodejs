@@ -9,7 +9,8 @@
         overflow-y: visible !important;
     }
 </style>
-<div class="modal-confirm opacity-0 pointer-events-none fixed w-full h-full top-0 left-0 flex items-center justify-center">
+<div
+    class="modal-confirm opacity-0 pointer-events-none fixed w-full h-full top-0 left-0 flex items-center justify-center">
     <div class="modal-overlay absolute w-full h-full bg-gray-900 opacity-50"></div>
 
     <div class="modal-container bg-white w-11/12 md:max-w-md mx-auto rounded shadow-lg z-50 overflow-y-auto">
@@ -29,7 +30,7 @@
             </div>
             <!--Body-->
             <div class="px-6 py-4">
-                <p>Message</p>
+                <p id="confirm-message"></p>
             </div>
 
             <!--Footer-->
@@ -38,14 +39,14 @@
                     class="modal-confirm-open hover:border-teal-300 text-gray-600 hover:text-teal-600 py-1 px-4 mt-2 mr-2 border border-gray-300 rounded-md focus:outline-none focus:shadow-outline focus:border-blue-300">No</button>
                 <button
                     class="py-1 px-4 mt-2 text-center float-right bg-red-600 rounded-md text-white text-sm hover:bg-red-500 focus:outline-none focus:shadow-outline focus:border-red-300 mr-2"
-                    id="btnSave">Yes</button>
+                    id="btnYes">Yes</button>
             </div>
         </div>
     </div>
 </div>
-<input type="hidden" id="book_id">
 <script>
-    // add book
+    var confirm_callback;
+
     var openmodal = document.querySelectorAll('.modal-confirm-open')
     for (var i = 0; i < openmodal.length; i++) {
         openmodal[i].addEventListener('click', function (event) {
@@ -71,44 +72,22 @@
         }
     };
 
-
-    function toggleModalConfirm(bookid) {
-        // if (bookid != null) {
-        //     $('#dmess').hide();
-        //     $.ajax({
-        //         type: 'GET',
-        //         contentType: 'application/json',
-        //         url: '/book/get?id=' + bookid,
-        //         success: function (res) {
-        //             if (res.type == "success" && res.data.length > 0) {
-        //                 $('#book_id').val(res.data[0]._id);
-        //                 $('#book_title').val(res.data[0].title);
-        //                 $('#book_author').val(res.data[0].author);
-        //                 $('#book_summary').val(res.data[0].summary);
-        //                 $('#book_message').val(res.data[0].message);
-        //                 $('#book_genre').val(res.data[0].genre);
-        //             } else {
-        //                 $('#dmess').show();
-        //                 $('#message_error').html('Cant get data');
-        //             }
-
-        //         }
-        //     });
-        // } else {
-        //     // clear data
-        //     $('#dmess').hide();
-        //     $('#book_id').val('');
-        //     $('#book_title').val('');
-        //     $('#book_author').val('');
-        //     $('#book_summary').val('');
-        //     $('#book_message').val('');
-        //     $('#book_genre').val('Truyện ngắn');
-        // }
-
+    function toggleModalConfirm(message, callback) {
         const body = document.querySelector('body')
         const modal = document.querySelector('.modal-confirm')
         modal.classList.toggle('opacity-0')
         modal.classList.toggle('pointer-events-none')
         body.classList.toggle('modal-confirm-active')
-    }    
+
+        $('#confirm-message').html(message);
+
+        confirm_callback = callback;
+    }
+
+    $(function () {
+        $('#btnYes').click(function (e) {
+            e.preventDefault();
+            confirm_callback(true);
+        })
+    });
 </script>

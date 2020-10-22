@@ -163,7 +163,8 @@
                         <td class="flex px-5 py-5 border-b border-gray-200 bg-white text-sm">
                             <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg"
                                 xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 512 512"
-                                width="24px" height="40px" style="enable-background:new 0 0 512 512;opacity: 0.7;cursor: pointer;" class="btnedit"
+                                width="24px" height="40px"
+                                style="enable-background:new 0 0 512 512;opacity: 0.7;cursor: pointer;" class="btnedit"
                                 xml:space="preserve" data-id="<%=book._id%>">
                                 <g>
                                     <g>
@@ -178,8 +179,8 @@
                             </svg>
                             <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg"
                                 xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" width="24px" height="40px"
-                                class="modal-confirm-open"
-                                viewBox="0 0 488.936 488.936" style="enable-background:new 0 0 488.936 488.936;margin-left: 10px;opacity: 0.7;cursor: pointer;"
+                                class="book-delete" viewBox="0 0 488.936 488.936"
+                                style="enable-background:new 0 0 488.936 488.936;margin-left: 10px;opacity: 0.7;cursor: pointer;"
                                 xml:space="preserve" data-id="<%=book._id%>">
                                 <g>
                                     <g>
@@ -210,6 +211,7 @@
     src="https://cdn.datatables.net/v/dt/jszip-2.5.0/dt-1.10.22/b-1.6.4/b-flash-1.6.4/b-html5-1.6.4/b-print-1.6.4/datatables.min.js"></script>
 <script>
     $(document).ready(function () {
+        var currentId = '';
         // add class
         let table = $('#grBook').DataTable({
             "searching": false,
@@ -217,6 +219,32 @@
             "info": false
         });
 
+        function deleteCallback(val) {
+            if (val == true) {
+                var data = { "id": currentId }
+                $.ajax({
+                    type: 'POST',
+                    data: JSON.stringify(data),
+                    contentType: 'application/json',
+                    url: '/book/delete',
+                    success: function (res) {
+                        if (res.type == "success") {
+                            toggleModal();
+                            $('#btnSearch').trigger('click');
+                        } else {
+                            $('#dmess').show();
+                            $('#message_error').html(res.description);
+                        }
+                    }
+                });
+            }
+        }
 
+        $('.book-delete').each(function () {
+            $(this).click(function () {
+                currentId = $(this).data('id');
+                toggleModalConfirm("Are you sure delete this book.", deleteCallback)
+            });
+        });
     });
 </script>

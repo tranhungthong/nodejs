@@ -78,12 +78,35 @@ module.exports.update = async function (req, res) {
     var now = new Date();
 
     var book = await Book.findOne({ _id: req.body.id }, function (err, data) {
-        var aaa=1;
+        var aaa = 1;
     });
     book.title = req.body.title;
     book.author = req.body.author;
     book.summary = req.body.summary;
     book.genre = req.body.genre;
+    book.update_date = dateFormat(now, "yyyy/MM/dd");
+    book.update_by = req.signedCookies.userid;
+
+    await book.save(function (err) {
+        if (err) {
+            globals.error.description = err;
+            res.json(globals.error);
+            return;
+        }
+    })
+
+    res.json(globals.success);
+};
+
+module.exports.delete = async function (req, res) {
+    // validate    
+    var now = new Date();
+
+    var book = await Book.findOne({ _id: req.body.id }, function (err, data) {
+        var aaa = 1;
+    });
+    
+    book.is_del = true;
     book.update_date = dateFormat(now, "yyyy/MM/dd");
     book.update_by = req.signedCookies.userid;
 
