@@ -8,14 +8,15 @@ module.exports.index = async function (req, res) {
     await Book.find({}, function (err, data) {
         if (data.length > 0) {
             res.render('books/index', {
-                books: data
+                books: data,
+                search: null
             });
 
             return;
         }
     });
 
-    res.render('books/index', { books: null });
+    res.render('books/index', { books: null, search: null });
 };
 
 module.exports.add = async function (req, res) {
@@ -78,14 +79,16 @@ module.exports.search = function (req, res) {
     }, function (err, data) {
         if (data.length > 0) {
             res.render('books/index', {
-                books: data
+                books: data,
+                search: req.body.search
             });
 
             return;
         }
 
         res.render('books/index', {
-            books: null
+            books: null,
+            search: null
         });
     });
 

@@ -15,7 +15,8 @@ module.exports.index = function _callee(req, res) {
           return regeneratorRuntime.awrap(Book.find({}, function (err, data) {
             if (data.length > 0) {
               res.render('books/index', {
-                books: data
+                books: data,
+                search: null
               });
               return;
             }
@@ -23,7 +24,8 @@ module.exports.index = function _callee(req, res) {
 
         case 2:
           res.render('books/index', {
-            books: null
+            books: null,
+            search: null
           });
 
         case 3:
@@ -114,13 +116,15 @@ module.exports.search = function (req, res) {
   }, function (err, data) {
     if (data.length > 0) {
       res.render('books/index', {
-        books: data
+        books: data,
+        search: req.body.search
       });
       return;
     }
 
     res.render('books/index', {
-      books: null
+      books: null,
+      search: null
     });
   });
 };
