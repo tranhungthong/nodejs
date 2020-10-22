@@ -67,9 +67,38 @@ function ValidateBook(book) {
     return msg;
 }
 
-module.exports.getABook = async function (req, res) {
+module.exports.update = async function (req, res) {
     // validate    
+    if (req.body.title == null || req.body.title == '') {
+        globals.error.description = 'Title is required.';
+        res.json(globals.error);
+        return;
+    }
 
+    var now = new Date();
+
+    var book = await Book.findOne({ _id: req.body.id }, function (err, data) {
+        var aaa=1;
+    });
+    book.title = req.body.title;
+    book.author = req.body.author;
+    book.summary = req.body.summary;
+    book.genre = req.body.genre;
+    book.update_date = dateFormat(now, "yyyy/MM/dd");
+    book.update_by = req.signedCookies.userid;
+
+    await book.save(function (err) {
+        if (err) {
+            globals.error.description = err;
+            res.json(globals.error);
+            return;
+        }
+    })
+
+    res.json(globals.success);
+};
+
+module.exports.getABook = async function (req, res) {
     await Book.find({ _id: req.query.id }, function (err, data) {
         if (data != null && data.length > 0) {
             globals.success.data = data;

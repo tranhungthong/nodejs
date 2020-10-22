@@ -106,7 +106,7 @@
         </div>
     </div>
 </div>
-
+<input type="hidden" id="book_id">
 <script>
     // edit book
     var editmodal = document.querySelectorAll('.btnedit')
@@ -155,6 +155,7 @@
                 url: '/book/get?id=' + bookid,
                 success: function (res) {
                     if (res.type == "success" && res.data.length > 0) {
+                        $('#book_id').val(res.data[0]._id);
                         $('#book_title').val(res.data[0].title);
                         $('#book_author').val(res.data[0].author);
                         $('#book_summary').val(res.data[0].summary);
@@ -170,6 +171,7 @@
         } else {
             // clear data
             $('#dmess').hide();
+            $('#book_id').val('');
             $('#book_title').val('');
             $('#book_author').val('');
             $('#book_summary').val('');
@@ -189,28 +191,46 @@
             e.preventDefault();
 
             var data = {};
+            data.id = $('#book_id').val();
             data.title = $('#book_title').val();
             data.author = $('#book_author').val();
             data.summary = $('#book_summary').val();
             data.message = $('#book_message').val();
             data.genre = $('#book_genre').val();
 
-            $.ajax({
-                type: 'POST',
-                data: JSON.stringify(data),
-                contentType: 'application/json',
-                url: '/book/add',
-                success: function (res) {
-                    if (res.type == "success") {
-                        toggleModal();
-                        $('#btnSearch').trigger('click');
-                    } else {
-                        $('#dmess').show();
-                        $('#message_error').html(res.description);
+            if (data.id == null || data.id == '') {
+                $.ajax({
+                    type: 'POST',
+                    data: JSON.stringify(data),
+                    contentType: 'application/json',
+                    url: '/book/add',
+                    success: function (res) {
+                        if (res.type == "success") {
+                            toggleModal();
+                            $('#btnSearch').trigger('click');
+                        } else {
+                            $('#dmess').show();
+                            $('#message_error').html(res.description);
+                        }
                     }
-
-                }
-            });
+                });
+            } else {
+                $.ajax({
+                    type: 'POST',
+                    data: JSON.stringify(data),
+                    contentType: 'application/json',
+                    url: '/book/update',
+                    success: function (res) {
+                        if (res.type == "success") {
+                            toggleModal();
+                            $('#btnSearch').trigger('click');
+                        } else {
+                            $('#dmess').show();
+                            $('#message_error').html(res.description);
+                        }
+                    }
+                });
+            }
         });
     });
 </script>

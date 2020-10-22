@@ -100,12 +100,64 @@ function ValidateBook(book) {
   return msg;
 }
 
-module.exports.getABook = function _callee3(req, res) {
+module.exports.update = function _callee3(req, res) {
+  var now, book;
   return regeneratorRuntime.async(function _callee3$(_context3) {
     while (1) {
       switch (_context3.prev = _context3.next) {
         case 0:
-          _context3.next = 2;
+          if (!(req.body.title == null || req.body.title == '')) {
+            _context3.next = 4;
+            break;
+          }
+
+          globals.error.description = 'Title is required.';
+          res.json(globals.error);
+          return _context3.abrupt("return");
+
+        case 4:
+          now = new Date();
+          _context3.next = 7;
+          return regeneratorRuntime.awrap(Book.findOne({
+            _id: req.body.id
+          }, function (err, data) {
+            var aaa = 1;
+          }));
+
+        case 7:
+          book = _context3.sent;
+          book.title = req.body.title;
+          book.author = req.body.author;
+          book.summary = req.body.summary;
+          book.genre = req.body.genre;
+          book.update_date = dateFormat(now, "yyyy/MM/dd");
+          book.update_by = req.signedCookies.userid;
+          _context3.next = 16;
+          return regeneratorRuntime.awrap(book.save(function (err) {
+            if (err) {
+              globals.error.description = err;
+              res.json(globals.error);
+              return;
+            }
+          }));
+
+        case 16:
+          res.json(globals.success);
+
+        case 17:
+        case "end":
+          return _context3.stop();
+      }
+    }
+  });
+};
+
+module.exports.getABook = function _callee4(req, res) {
+  return regeneratorRuntime.async(function _callee4$(_context4) {
+    while (1) {
+      switch (_context4.prev = _context4.next) {
+        case 0:
+          _context4.next = 2;
           return regeneratorRuntime.awrap(Book.find({
             _id: req.query.id
           }, function (err, data) {
@@ -122,7 +174,7 @@ module.exports.getABook = function _callee3(req, res) {
 
         case 4:
         case "end":
-          return _context3.stop();
+          return _context4.stop();
       }
     }
   });

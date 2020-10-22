@@ -1,0 +1,114 @@
+<!--Modal-->
+<style>
+    .modal-confirm {
+        transition: opacity 0.25s ease;
+    }
+
+    body.modal-confirm-active {
+        overflow-x: hidden;
+        overflow-y: visible !important;
+    }
+</style>
+<div class="modal-confirm opacity-0 pointer-events-none fixed w-full h-full top-0 left-0 flex items-center justify-center">
+    <div class="modal-overlay absolute w-full h-full bg-gray-900 opacity-50"></div>
+
+    <div class="modal-container bg-white w-11/12 md:max-w-md mx-auto rounded shadow-lg z-50 overflow-y-auto">
+        <!-- Add margin if you want to see some of the overlay behind the modal-->
+        <div class="modal-content py-4 text-left">
+            <!--Title-->
+            <div class="flex justify-between items-center pb-3">
+                <p class="text-xl px-6">Confirm</p>
+                <div class="modal-confirm-close cursor-pointer z-50 px-6">
+                    <svg class="fill-current text-black" xmlns="http://www.w3.org/2000/svg" width="18" height="18"
+                        viewBox="0 0 18 18">
+                        <path
+                            d="M14.53 4.53l-1.06-1.06L9 7.94 4.53 3.47 3.47 4.53 7.94 9l-4.47 4.47 1.06 1.06L9 10.06l4.47 4.47 1.06-1.06L10.06 9z">
+                        </path>
+                    </svg>
+                </div>
+            </div>
+            <!--Body-->
+            <div class="px-6 py-4">
+                <p>Message</p>
+            </div>
+
+            <!--Footer-->
+            <div class="flex justify-end pt-2">
+                <button
+                    class="modal-confirm-open hover:border-teal-300 text-gray-600 hover:text-teal-600 py-1 px-4 mt-2 mr-2 border border-gray-300 rounded-md focus:outline-none focus:shadow-outline focus:border-blue-300">No</button>
+                <button
+                    class="py-1 px-4 mt-2 text-center float-right bg-red-600 rounded-md text-white text-sm hover:bg-red-500 focus:outline-none focus:shadow-outline focus:border-red-300 mr-2"
+                    id="btnSave">Yes</button>
+            </div>
+        </div>
+    </div>
+</div>
+<input type="hidden" id="book_id">
+<script>
+    // add book
+    var openmodal = document.querySelectorAll('.modal-confirm-open')
+    for (var i = 0; i < openmodal.length; i++) {
+        openmodal[i].addEventListener('click', function (event) {
+            event.preventDefault()
+            toggleModalConfirm(null)
+        })
+    }
+
+    var closemodal = document.querySelectorAll('.modal-confirm-close')
+    for (var i = 0; i < closemodal.length; i++) {
+        closemodal[i].addEventListener('click', toggleModalConfirm)
+    }
+
+    document.onkeydown = function (evt) {
+        evt = evt || window.event
+        var isEscape = false
+        if ("key" in evt) {
+        } else {
+            isEscape = (evt.keyCode === 27)
+        }
+        if (isEscape && document.body.classList.contains('modal-confirm-active')) {
+            toggleModalConfirm(null)
+        }
+    };
+
+
+    function toggleModalConfirm(bookid) {
+        // if (bookid != null) {
+        //     $('#dmess').hide();
+        //     $.ajax({
+        //         type: 'GET',
+        //         contentType: 'application/json',
+        //         url: '/book/get?id=' + bookid,
+        //         success: function (res) {
+        //             if (res.type == "success" && res.data.length > 0) {
+        //                 $('#book_id').val(res.data[0]._id);
+        //                 $('#book_title').val(res.data[0].title);
+        //                 $('#book_author').val(res.data[0].author);
+        //                 $('#book_summary').val(res.data[0].summary);
+        //                 $('#book_message').val(res.data[0].message);
+        //                 $('#book_genre').val(res.data[0].genre);
+        //             } else {
+        //                 $('#dmess').show();
+        //                 $('#message_error').html('Cant get data');
+        //             }
+
+        //         }
+        //     });
+        // } else {
+        //     // clear data
+        //     $('#dmess').hide();
+        //     $('#book_id').val('');
+        //     $('#book_title').val('');
+        //     $('#book_author').val('');
+        //     $('#book_summary').val('');
+        //     $('#book_message').val('');
+        //     $('#book_genre').val('Truyện ngắn');
+        // }
+
+        const body = document.querySelector('body')
+        const modal = document.querySelector('.modal-confirm')
+        modal.classList.toggle('opacity-0')
+        modal.classList.toggle('pointer-events-none')
+        body.classList.toggle('modal-confirm-active')
+    }    
+</script>
