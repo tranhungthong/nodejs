@@ -128,7 +128,26 @@
                     <!-- Notfound data -->
                     <% if(!books){ %>
                     <tr>
-                        <td colspan="4">Data notfound</td>
+                        <td colspan="4">
+                            <div class="container mx-auto h-full flex justify-center items-center">
+                                <div class="h-32 mt-12">
+                                    <svg width="64" height="41" viewBox="0 0 64 41" xmlns="http://www.w3.org/2000/svg">
+                                        <g transform="translate(0 1)" fill="none" fill-rule="evenodd">
+                                            <ellipse fill="#F5F5F5" cx="32" cy="33" rx="32" ry="7"></ellipse>
+                                            <g fill-rule="nonzero" stroke="#D9D9D9">
+                                                <path
+                                                    d="M55 12.76L44.854 1.258C44.367.474 43.656 0 42.907 0H21.093c-.749 0-1.46.474-1.947 1.257L9 12.761V22h46v-9.24z">
+                                                </path>
+                                                <path
+                                                    d="M41.613 15.931c0-1.605.994-2.93 2.227-2.931H55v18.137C55 33.26 53.68 35 52.05 35h-40.1C10.32 35 9 33.259 9 31.137V13h11.16c1.233 0 2.227 1.323 2.227 2.928v.022c0 1.605 1.005 2.901 2.237 2.901h14.752c1.232 0 2.237-1.308 2.237-2.913v-.007z"
+                                                    fill="#FAFAFA"></path>
+                                            </g>
+                                        </g>
+                                    </svg>
+                                    <p class="text-gray-500 ml-1">No data</p>
+                                </div>
+                            </div>
+                        </td>
                     </tr>
                     <% } %>
 
@@ -210,37 +229,37 @@
 <script type="text/javascript"
     src="https://cdn.datatables.net/v/dt/jszip-2.5.0/dt-1.10.22/b-1.6.4/b-flash-1.6.4/b-html5-1.6.4/b-print-1.6.4/datatables.min.js"></script>
 <script>
-    $(document).ready(function () {        
+    $(document).ready(function () {
         // add class
         let table = $('#grBook').DataTable({
             "searching": false,
             "lengthChange": false,
             "info": false
-        });       
+        });
     });
 
     var currentId = '';
 
-        function deleteCallback(val) {
-            if (val == true) {
-                var data = { "id": currentId }
-                $.ajax({
-                    type: 'POST',
-                    data: JSON.stringify(data),
-                    contentType: 'application/json',
-                    url: '/book/delete',
-                    success: function (res) {
-                        if (res.type == "success") {
-                            toggleModalConfirm();
-                            $('#btnSearch').trigger('click');
-                        } else {
-                            $('#dmess').show();
-                            $('#message_error').html(res.description);
-                        }
+    function deleteCallback(val) {
+        if (val == true) {
+            var data = { "id": currentId }
+            $.ajax({
+                type: 'POST',
+                data: JSON.stringify(data),
+                contentType: 'application/json',
+                url: '/book/delete',
+                success: function (res) {
+                    if (res.type == "success") {
+                        toggleModalConfirm();
+                        $('#btnSearch').trigger('click');
+                    } else {
+                        $('#dmess').show();
+                        $('#message_error').html(res.description);
                     }
-                });
-            }
+                }
+            });
         }
+    }
 
     var editmodal = document.querySelectorAll('.book-delete')
     for (var i = 0; i < editmodal.length; i++) {

@@ -250,7 +250,7 @@ module.exports.search = function (req, res) {
 
     res.render('books/index', {
       books: null,
-      search: null
+      search: req.body.search
     });
   });
 };
