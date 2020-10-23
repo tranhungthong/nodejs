@@ -1,3 +1,4 @@
 myapp/node_modules/*
 myapp/dist/*
 .vscode/settings.json
+myapp/public/upload/books/*

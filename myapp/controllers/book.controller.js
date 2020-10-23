@@ -25,11 +25,10 @@ module.exports.add = async function (req, res) {
     var now = new Date();
 
     var book = new Book({
-        title: req.body.title,
-        author: req.body.author,
-        summary: req.body.summary,
-        message: req.body.message,
-        genre: req.body.genre,
+        title: req.body.book_title,
+        author: req.body.book_author,
+        summary: req.body.book_summary,
+        genre: req.body.book_genre,
         ISBN: '',
         img_cover: '',
         create_date: dateFormat(now, "yyyy/MM/dd"),
@@ -38,6 +37,10 @@ module.exports.add = async function (req, res) {
         update_by: req.signedCookies.userid,
         is_del: false
     });
+
+    if (req.file != null) {
+        book.img_cover = req.file.path.split('\\').slice(1).join('\\');
+    }
 
     var valid = ValidateBook(book);
 
@@ -69,7 +72,7 @@ function ValidateBook(book) {
 
 module.exports.update = async function (req, res) {
     // validate    
-    if (req.body.title == null || req.body.title == '') {
+    if (req.body.book_title == null || req.body.book_title == '') {
         globals.error.description = 'Title is required.';
         res.json(globals.error);
         return;
@@ -77,15 +80,20 @@ module.exports.update = async function (req, res) {
 
     var now = new Date();
 
-    var book = await Book.findOne({ _id: req.body.id }, function (err, data) {
+    var book = await Book.findOne({ _id: req.body.book_id }, function (err, data) {
         var aaa = 1;
     });
-    book.title = req.body.title;
-    book.author = req.body.author;
-    book.summary = req.body.summary;
-    book.genre = req.body.genre;
+    
+    book.title = req.body.book_title;
+    book.author = req.body.book_author;
+    book.summary = req.body.book_summary;
+    book.genre = req.body.book_genre;
     book.update_date = dateFormat(now, "yyyy/MM/dd");
     book.update_by = req.signedCookies.userid;
+
+    if (req.file != null) {
+        book.img_cover = req.file.path.split('\\').slice(1).join('\\');
+    }
 
     await book.save(function (err) {
         if (err) {

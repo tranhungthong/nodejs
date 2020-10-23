@@ -47,11 +47,10 @@ module.exports.add = function _callee2(req, res) {
           // validate    
           now = new Date();
           book = new Book({
-            title: req.body.title,
-            author: req.body.author,
-            summary: req.body.summary,
-            message: req.body.message,
-            genre: req.body.genre,
+            title: req.body.book_title,
+            author: req.body.book_author,
+            summary: req.body.book_summary,
+            genre: req.body.book_genre,
             ISBN: '',
             img_cover: '',
             create_date: dateFormat(now, "yyyy/MM/dd"),
@@ -60,10 +59,15 @@ module.exports.add = function _callee2(req, res) {
             update_by: req.signedCookies.userid,
             is_del: false
           });
+
+          if (req.file != null) {
+            book.img_cover = req.file.path.split('\\').slice(1).join('\\');
+          }
+
           valid = ValidateBook(book);
 
           if (!(valid != '')) {
-            _context2.next = 7;
+            _context2.next = 8;
             break;
           }
 
@@ -71,8 +75,8 @@ module.exports.add = function _callee2(req, res) {
           res.json(globals.error);
           return _context2.abrupt("return");
 
-        case 7:
-          _context2.next = 9;
+        case 8:
+          _context2.next = 10;
           return regeneratorRuntime.awrap(book.save(function (err) {
             if (err) {
               globals.error.description = err;
@@ -81,10 +85,10 @@ module.exports.add = function _callee2(req, res) {
             }
           }));
 
-        case 9:
+        case 10:
           res.json(globals.success);
 
-        case 10:
+        case 11:
         case "end":
           return _context2.stop();
       }
@@ -108,7 +112,7 @@ module.exports.update = function _callee3(req, res) {
     while (1) {
       switch (_context3.prev = _context3.next) {
         case 0:
-          if (!(req.body.title == null || req.body.title == '')) {
+          if (!(req.body.book_title == null || req.body.book_title == '')) {
             _context3.next = 4;
             break;
           }
@@ -121,20 +125,25 @@ module.exports.update = function _callee3(req, res) {
           now = new Date();
           _context3.next = 7;
           return regeneratorRuntime.awrap(Book.findOne({
-            _id: req.body.id
+            _id: req.body.book_id
           }, function (err, data) {
             var aaa = 1;
           }));
 
         case 7:
           book = _context3.sent;
-          book.title = req.body.title;
-          book.author = req.body.author;
-          book.summary = req.body.summary;
-          book.genre = req.body.genre;
+          book.title = req.body.book_title;
+          book.author = req.body.book_author;
+          book.summary = req.body.book_summary;
+          book.genre = req.body.book_genre;
           book.update_date = dateFormat(now, "yyyy/MM/dd");
           book.update_by = req.signedCookies.userid;
-          _context3.next = 16;
+
+          if (req.file != null) {
+            book.img_cover = req.file.path.split('\\').slice(1).join('\\');
+          }
+
+          _context3.next = 17;
           return regeneratorRuntime.awrap(book.save(function (err) {
             if (err) {
               globals.error.description = err;
@@ -143,10 +152,10 @@ module.exports.update = function _callee3(req, res) {
             }
           }));
 
-        case 16:
+        case 17:
           res.json(globals.success);
 
-        case 17:
+        case 18:
         case "end":
           return _context3.stop();
       }
