@@ -1,4 +1,41 @@
-@import "tailwindcss/base";
-@import "tailwindcss/components";
-@import "tailwindcss/utilities";
-@import "mystyle.css";
+@tailwind base;
+
+@tailwind components;
+
+@tailwind utilities;
+
+.input{
+    @apply transition duration-500 appearance-none block w-full bg-white text-sm border border-gray-400 rounded py-2 px-4 leading-tight;
+}
+
+.input:focus{
+    @apply outline-none bg-white border-primary-200 shadow-inner;
+}
+
+.input:hover{
+    @apply border-primary-200;
+}
+
+.btn{
+    @apply transition duration-500 py-2 px-4 mt-2 text-center float-right bg-primary-200 rounded-md text-white text-sm;
+}
+
+.btn:focus{
+    @apply outline-none shadow-outline border-blue-300;
+}
+
+.btn:hover{
+    @apply bg-primary-100;
+}
+
+.combobox{
+    @apply transition duration-500 mt-1 block w-full py-2 px-3 border border-gray-400 bg-white rounded-md shadow-sm  transition duration-150 ease-in-out;
+}
+
+.combobox:focus{
+    @apply outline-none border-primary-200;
+}
+
+.combobox:hover{
+    @apply border-primary-200;
+}

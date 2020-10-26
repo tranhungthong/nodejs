@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "nodemon --inspect app.js",
-    "build:css": "npx tailwindcss build ./public/stylesheets/tailwind.css -o ./public/stylesheets/style.css"
+    "build-css": "npx tailwindcss build ./public/stylesheets/tailwind.css -o ./public/stylesheets/style.css"
   },
   "author": "",
   "license": "ISC",
