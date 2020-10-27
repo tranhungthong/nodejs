@@ -1072,6 +1072,444 @@ Sửa lại mô hình code theo mô hình MVC
     app.use('/book', authMiddleware.requireAuth, bookRoute);
     ```
 
+### 2. Màn hình edit và add book
+- views/books/book_dialog.ejs
+    ```html
+    <!--Modal-->
+    <style>
+        .modal {
+            transition: opacity 0.25s ease;
+        }
+
+        body.modal-active {
+            overflow-x: hidden;
+            overflow-y: visible !important;
+        }
+    </style>
+    <div class="modal opacity-0 pointer-events-none fixed w-full h-full top-0 left-0 flex items-center justify-center">
+        <div class="modal-overlay absolute w-full h-full bg-gray-900 opacity-50"></div>
+
+        <div class="modal-container bg-white w-11/12 md:max-w-md mx-auto rounded shadow-lg z-50 overflow-y-auto">
+            <!-- Add margin if you want to see some of the overlay behind the modal-->
+            <div class="modal-content pt-3 text-left">
+                <form method="POST" enctype="multipart/form-data" role="form" id="bookform">
+                    <!--Title-->
+                    <div class="flex justify-between items-center pb-3 border-b border-gray-300">
+                        <p class="text-xl px-6">Book</p>
+                        <div class="modal-close cursor-pointer z-50 px-6">
+                            <svg class="fill-current text-black" xmlns="http://www.w3.org/2000/svg" width="18" height="18"
+                                viewBox="0 0 18 18">
+                                <path
+                                    d="M14.53 4.53l-1.06-1.06L9 7.94 4.53 3.47 3.47 4.53 7.94 9l-4.47 4.47 1.06 1.06L9 10.06l4.47 4.47 1.06-1.06L10.06 9z">
+                                </path>
+                            </svg>
+                        </div>
+                    </div>
+                    <!--Body-->
+                    <div class="px-6 py-4">
+                        <div id="dmess" class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-2 hidden"
+                            role="alert">
+                            <p id="message_error"></p>
+                        </div>
+                        <div class="md:flex md:items-center mb-6">
+                            <div class="md:w-1/5">
+                                <label class="block sm:text-sm md:text-right mb-1 md:mb-0 pr-4" for="book_title">
+                                    <span class="text-red-600">*</span> Title
+                                </label>
+                            </div>
+                            <div class="md:w-4/5">
+                                <input
+                                    class="input"
+                                    id="book_title" name="book_title" type="text">
+                            </div>
+                        </div>
+                        <div class="md:flex md:items-center mb-6">
+                            <div class="md:w-1/5">
+                                <label class="block sm:text-sm md:text-right mb-1 md:mb-0 pr-4" for="book_author">
+                                    Author
+                                </label>
+                            </div>
+                            <div class="md:w-4/5">
+                                <input
+                                    class="input"
+                                    id="book_author" name="book_author" type="text">
+                            </div>
+                        </div>
+                        <div class="md:flex md:items-center mb-6">
+                            <div class="md:w-1/5">
+                                <label class="block sm:text-sm md:text-right mb-1 md:mb-0 pr-4" for="book_author">
+                                    Cover
+                                </label>
+                            </div>
+                            <div class="md:w-4/5">
+                                <input type="file" name="cover" id="cover">
+                            </div>
+                        </div>
+                        <div class="md:flex md:items-center mb-6">
+                            <div class="md:w-1/5">
+                                <label class="block sm:text-sm md:text-right mb-1 md:mb-0 pr-4" for="book_summary">
+                                    Summary
+                                </label>
+                            </div>
+                            <div class="md:w-4/5">
+                                <input
+                                    class="input"
+                                    id="book_summary" name="book_summary" type="text">
+                            </div>
+                        </div>
+                        <div class="md:flex md:items-center mb-6">
+                            <div class="md:w-1/5">
+                                <label class="block sm:text-sm md:text-right mb-1 md:mb-0 pr-4" for="book_genre">
+                                    Genre
+                                </label>
+                            </div>
+                            <div class="md:w-4/5">
+                                <select id="book_genre" name="book_genre"
+                                    class="combobox form-select sm:text-sm sm:leading-5">
+                                    <option>Truyện ngắn</option>
+                                    <option>Truyện dài</option>
+                                    <option>Lịch sử</option>
+                                    <option>Thần thoại</option>
+                                    <option>Kiếm hiệp</option>
+                                    <option>Hài hước</option>
+                                    <option>Khoa học</option>
+                                    <option>Trinh thám</option>
+                                    <option>Kinh tế</option>
+                                    <option>Y học</option>
+                                    <option>Tình cảm, lãng mạn</option>
+                                    <option>Sức khỏe</option>
+                                </select>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!--Footer-->
+                    <div class="flex justify-end pt-2 border-t border-gray-300">
+                        <button
+                            class="modal-open hover:border-teal-300 text-gray-600 hover:text-teal-600 py-1 px-4 mt-2 mr-2 border border-gray-300 rounded-md focus:outline-none focus:shadow-outline focus:border-blue-300">Close</button>
+                        <button
+                            class="btn py-1 px-4 mt-2 mr-6"
+                            id="btnSave">Save</button>
+                    </div>
+
+                    <input type="hidden" id="book_id" name="book_id">
+                </form>
+            </div>
+        </div>
+    </div>
+    <script>
+        // edit book
+        var editmodal = document.querySelectorAll('.btnedit')
+        for (var i = 0; i < editmodal.length; i++) {
+            editmodal[i].addEventListener('click', function (event) {
+                event.preventDefault()
+                var bookid = $(this).data('id');
+                console.log(bookid);
+                toggleModal(bookid)
+            })
+        }
+
+        // add book
+        var openmodal = document.querySelectorAll('.modal-open')
+        for (var i = 0; i < openmodal.length; i++) {
+            openmodal[i].addEventListener('click', function (event) {
+                event.preventDefault()
+                toggleModal(null)
+            })
+        }
+
+        var closemodal = document.querySelectorAll('.modal-close')
+        for (var i = 0; i < closemodal.length; i++) {
+            closemodal[i].addEventListener('click', toggleModal)
+        }
+
+        document.onkeydown = function (evt) {
+            evt = evt || window.event
+            var isEscape = false
+            if ("key" in evt) {
+            } else {
+                isEscape = (evt.keyCode === 27)
+            }
+            if (isEscape && document.body.classList.contains('modal-active')) {
+                toggleModal(null)
+            }
+        };
+
+
+        function toggleModal(bookid) {
+            if (bookid != null) {
+                $('#dmess').hide();
+                $.ajax({
+                    type: 'GET',
+                    contentType: 'application/json',
+                    url: '/book/get?id=' + bookid,
+                    success: function (res) {
+                        if (res.type == "success" && res.data.length > 0) {
+                            $('#book_id').val(res.data[0]._id);
+                            $('#book_title').val(res.data[0].title);
+                            $('#book_author').val(res.data[0].author);
+                            $('#book_summary').val(res.data[0].summary);
+                            $('#book_message').val(res.data[0].message);
+                            $('#book_genre').val(res.data[0].genre);
+                        } else {
+                            $('#dmess').show();
+                            $('#message_error').html('Cant get data');
+                        }
+
+                    }
+                });
+            } else {
+                // clear data
+                $('#dmess').hide();
+                $('#book_id').val('');
+                $('#book_title').val('');
+                $('#book_author').val('');
+                $('#book_summary').val('');
+                $('#book_message').val('');
+                $('#book_genre').val('Truyện ngắn');
+            }
+
+            const body = document.querySelector('body')
+            const modal = document.querySelector('.modal')
+            modal.classList.toggle('opacity-0')
+            modal.classList.toggle('pointer-events-none')
+            body.classList.toggle('modal-active')
+        }
+
+        $(function () {
+            $('#btnSave').click(function (e) {
+                e.preventDefault();
+
+                var form = $('#bookform')[0];
+                var formdata = new FormData(form);
+
+                var data = {};
+                data.id = $('#book_id').val();
+
+                if (data.id == null || data.id == '') {
+                    $.ajax({
+                        type: 'POST',
+                        data: formdata,
+                        contentType: 'application/json',
+                        url: '/book/add',
+                        contentType: false,
+                        processData: false,
+                        success: function (res) {
+                            if (res.type == "success") {
+                                toggleModal();
+                                $('#btnSearch').trigger('click');
+                            } else {
+                                $('#dmess').show();
+                                $('#message_error').html(res.description);
+                            }
+                        }
+                    });
+                } else {
+                    $.ajax({
+                        type: 'POST',
+                        data: formdata,
+                        contentType: 'application/json',
+                        url: '/book/update',
+                        contentType: false,
+                        processData: false,
+                        success: function (res) {
+                            if (res.type == "success") {
+                                toggleModal();
+                                $('#btnSearch').trigger('click');
+                            } else {
+                                $('#dmess').show();
+                                $('#message_error').html(res.description);
+                            }
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+    ```
+- controllers/book.controller.js
+    ```js
+    var Book = require('../models/book.model');
+    var dateFormat = require('dateformat');
+    var globals = require('../global')
+
+
+    module.exports.index = async function (req, res) {
+        // get data
+        await Book.find({ is_del: false }, function (err, data) {
+            if (data.length > 0) {
+                res.render('books/index', {
+                    books: data,
+                    search: null
+                });
+
+                return;
+            }
+        });
+
+        res.render('books/index', { books: null, search: null });
+    };
+
+    module.exports.add = async function (req, res) {
+        // validate    
+
+        var now = new Date();
+
+        var book = new Book({
+            title: req.body.book_title,
+            author: req.body.book_author,
+            summary: req.body.book_summary,
+            genre: req.body.book_genre,
+            ISBN: '',
+            img_cover: '',
+            create_date: dateFormat(now, "yyyy/MM/dd"),
+            create_by: req.signedCookies.userid,
+            update_date: dateFormat(now, "yyyy/MM/dd"),
+            update_by: req.signedCookies.userid,
+            is_del: false
+        });
+
+        if (req.file != null) {
+            book.img_cover = req.file.path.split('\\').slice(1).join('\\');
+        }
+
+        var valid = ValidateBook(book);
+
+        if (valid != '') {
+            globals.error.description = valid;
+            res.json(globals.error);
+            return;
+        }
+
+        await book.save(function (err) {
+            if (err) {
+                globals.error.description = err;
+                res.json(globals.error);
+                return;
+            }
+        })
+
+        res.json(globals.success);
+    };
+
+    function ValidateBook(book) {
+        var msg = '';
+        if (!book.title) {
+            msg += 'Title is required.'
+        }
+
+        return msg;
+    }
+
+    module.exports.update = async function (req, res) {
+        // validate    
+        if (req.body.book_title == null || req.body.book_title == '') {
+            globals.error.description = 'Title is required.';
+            res.json(globals.error);
+            return;
+        }
+
+        var now = new Date();
+
+        var book = await Book.findOne({ _id: req.body.book_id }, function (err, data) {
+            var aaa = 1;
+        });
+        
+        book.title = req.body.book_title;
+        book.author = req.body.book_author;
+        book.summary = req.body.book_summary;
+        book.genre = req.body.book_genre;
+        book.update_date = dateFormat(now, "yyyy/MM/dd");
+        book.update_by = req.signedCookies.userid;
+
+        if (req.file != null) {
+            book.img_cover = req.file.path.split('\\').slice(1).join('\\');
+        }
+
+        await book.save(function (err) {
+            if (err) {
+                globals.error.description = err;
+                res.json(globals.error);
+                return;
+            }
+        })
+
+        res.json(globals.success);
+    };
+
+    module.exports.delete = async function (req, res) {
+        // validate    
+        var now = new Date();
+
+        var book = await Book.findOne({ _id: req.body.id }, function (err, data) {
+            var aaa = 1;
+        });
+
+        book.is_del = true;
+        book.update_date = dateFormat(now, "yyyy/MM/dd");
+        book.update_by = req.signedCookies.userid;
+
+        await book.save(function (err) {
+            if (err) {
+                globals.error.description = err;
+                res.json(globals.error);
+                return;
+            }
+        })
+
+        res.json(globals.success);
+    };
+
+    module.exports.getABook = async function (req, res) {
+        await Book.find({ _id: req.query.id }, function (err, data) {
+            if (data != null && data.length > 0) {
+                globals.success.data = data;
+                res.json(globals.success);
+                return;
+            }
+        });
+
+        globals.success.data = null;
+        res.json(globals.success);
+    };
+
+    module.exports.search = function (req, res) {
+        // get data
+        var input = '^.*' + req.body.search + '.*';
+
+        Book.find({
+            $and: [
+                {
+                    $or: [
+                        { title: { $regex: new RegExp(input, "i") } },
+                        { author: { $regex: new RegExp(input, "i") } }
+                    ]
+                }, {
+                    is_del: false
+                }
+            ]
+
+        }, function (err, data) {
+            if (data.length > 0) {
+                res.render('books/index', {
+                    books: data,
+                    search: req.body.search
+                });
+
+                return;
+            }
+
+            res.render('books/index', {
+                books: null,
+                search: req.body.search
+            });
+        });
+
+
+    };
+    ```
+
 ## Usage
 - Sau khi clone code từ git chạy lệnh cài đặt các module cần thiết
 
