@@ -12,7 +12,7 @@ module.exports.login = function (req, res) {
 
 module.exports.postLogin = function (req, res) {
   var username = req.body.username;
-  var password = req.body.password; 
+  var password = req.body.password;
   User.find({
     email: username,
     password: password
