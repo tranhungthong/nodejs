@@ -9,14 +9,15 @@
 </head>
 
 <body>
-    <div class="flex h-screen bg-gray-200 font-roboto">
-        <%- include ('sidebar.ejs') %>
-        <div class="flex-1 flex flex-col overflow-hidden">
+    <div class="flex h-screen">
+        <div class="bg-sitebar-900">
+            <%- include ('sidebar.ejs') %>
+        </div>
+        <div class="w-screen">
             <%- include ('header.ejs') %>
-            <!-- <div style="box-shadow: 0 6px 50px -18px rgba(0,0,0,.81)"></div> -->
             <main class="flex-1 overflow-x-hidden overflow-y-auto bg-gray-200 mt-4">
                 <div class="mx-auto px-4">
-                    <div class="max-w-sm w-full lg:max-w-full lg:flex bg-white">
+                    <div class="flex w-full bg-white">
                         <%- body%>
                     </div>                    
                 </div>

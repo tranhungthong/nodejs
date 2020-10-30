@@ -4,15 +4,18 @@ $(document).ready(function () {
   var OriginalWidth = 256;
   $('#btnCollapse').click(function () {
     // $('#my-sidebar').toggleClass('my-sidebar', 1000)
-    $('#my-sidebar').animate({
-      width: 'toggle'
-    }, 350); // width = $('#my-sidebar').width();
-    // if (OriginalWidth == width) {
-    //     $('#my-sidebar').animate({ width: '50' }, 'slow');
-    // }
-    // else {
-    //     $('#my-sidebar').animate({ width: OriginalWidth }, 'slow');
-    // }
+    // $('#my-sidebar').animate({ width: 'toggle' }, 350);
+    width = $('#my-sidebar').width();
+
+    if (OriginalWidth == width) {
+      $('#my-sidebar').animate({
+        width: '50'
+      }, 'slow');
+    } else {
+      $('#my-sidebar').animate({
+        width: OriginalWidth
+      }, 'slow');
+    }
   });
 });
 $('#btnavatar').click(function () {
