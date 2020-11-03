@@ -13,22 +13,22 @@ module.exports.index = function (req, res) {
 };
 
 module.exports.search = function _callee(req, res) {
-  var data10Day, dataCurrent;
+  var city, data10Day, dataCurrent;
   return regeneratorRuntime.async(function _callee$(_context) {
     while (1) {
       switch (_context.prev = _context.next) {
         case 0:
-          _context.next = 2;
-          return regeneratorRuntime.awrap(weatherApi.Get10Day('hanoi', 10, 'metric or imperial'));
+          city = req.body.search;
+          _context.next = 3;
+          return regeneratorRuntime.awrap(weatherApi.Get10Day(city, 10, 'metric or imperial'));
 
-        case 2:
+        case 3:
           data10Day = _context.sent;
-          _context.next = 5;
-          return regeneratorRuntime.awrap(weatherApi.GetCurrent('hanoi', 'metric or imperial'));
+          _context.next = 6;
+          return regeneratorRuntime.awrap(weatherApi.GetCurrent(city, 'metric or imperial'));
 
-        case 5:
+        case 6:
           dataCurrent = _context.sent;
-          console.log(dataCurrent);
 
           if (data10Day && dataCurrent) {
             res.render('weathers/index', {

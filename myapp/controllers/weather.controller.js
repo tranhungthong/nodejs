@@ -11,9 +11,10 @@ module.exports.index = function (req, res) {
 };
 
 module.exports.search = async function (req, res) {
-    const data10Day = await weatherApi.Get10Day('hanoi', 10, 'metric or imperial');
-    const dataCurrent = await weatherApi.GetCurrent('hanoi', 'metric or imperial');
-    console.log(dataCurrent);
+    var city = req.body.search;
+    const data10Day = await weatherApi.Get10Day(city, 10, 'metric or imperial');
+    const dataCurrent = await weatherApi.GetCurrent(city, 'metric or imperial');
+
     if (data10Day && dataCurrent) {
         res.render('weathers/index', {
             title: 'weather',

@@ -9,6 +9,7 @@ var loginRoute = require('./routes/auth.route');
 var bookRoute = require('./routes/book.route');
 var weatherRoute = require('./routes/weather.route');
 var authMiddleware = require('./middlewares/auth.middleware');
+var fahrenheitToCelsius = require('fahrenheit-to-celsius');
 
 app.set('layout', './layouts/layout')
 app.use(expressLayouts)
@@ -38,6 +39,9 @@ app.use('/auth', loginRoute);
 app.use('/book', authMiddleware.requireAuth, bookRoute);
 app.use('/weather', authMiddleware.requireAuth, weatherRoute);
 
+app.locals.convertFtoC = function (val) {
+    return Math.round(val - 273.15);
+}
 app.locals.formatDateTime = function (dt) {
     var day = new Date(dt * 1000).getDay();
     var dayofweek = 'None';

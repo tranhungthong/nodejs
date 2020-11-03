@@ -28,15 +28,15 @@
         </div>
         <div class="flex items-center justify-start gap-2">
             <img class="h-4" src="/images/up.svg" />
-            <span><%=dataCurrent.main.temp_max%>°</span>
+            <span><%=convertFtoC(dataCurrent.main.temp_max)%>°</span>
             <img class="h-4" src="/images/down.svg" />
-            <span><%=dataCurrent.main.temp_min%>°</span>
+            <span><%=convertFtoC(dataCurrent.main.temp_min)%>°</span>
         </div>
         <div class="flex items-center">
             <span class="text-6xl font-bold">
-                <%=dataCurrent.main.temp%>°
+                <%=convertFtoC(dataCurrent.main.temp)%>°
             </span>
-            <span class="ml-5 text-xl">F</span>
+            <span class="ml-5 text-xl">C</span>
         </div>
         <div class="grid grid-cols-2 gap-12">
             <div class="divide-y divide-gray-300">
@@ -47,8 +47,8 @@
                         <tr class="border-b border-b-2 border-gray-200">
                             <td class="w-1/2"><%=formatDateTime(data.dt)%></td>
                             <td class="w-48"> <img src="http://openweathermap.org/img/wn/<%=data.weather[0].icon%>.png" /></td>
-                            <td class="w-64"><%=data.temp.min%>°</td>
-                            <td class="w-64"><%=data.temp.max%>°</td>
+                            <td class="w-64"><%=convertFtoC(data.temp.min)%>°</td>
+                            <td class="w-64"><%=convertFtoC(data.temp.max)%>°</td>
                         </tr>
                         <% }); %>
                     </table>                    
@@ -61,11 +61,11 @@
                     <div class="divide-y divide-gray-300 w-full">
                         <div class="flex justify-between py-2">
                             <span>Feels like</span>
-                            <span><%=dataCurrent.main.feels_like%>°</span>
+                            <span><%=convertFtoC(dataCurrent.main.feels_like)%>°</span>
                         </div>
                         <div class="flex justify-between py-2">
                             <span>Humidity</span>
-                            <span><%=dataCurrent.main.humidity%></span>
+                            <span><%=dataCurrent.main.humidity%>%</span>
                         </div>
                         <div class="flex justify-between py-2">
                             <span>Visibility</span>
