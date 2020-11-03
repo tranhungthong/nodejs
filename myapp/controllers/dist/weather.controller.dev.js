@@ -7,38 +7,46 @@ module.exports.index = function (req, res) {
     title: 'weather',
     errors: null,
     search: null,
-    weathers: null
+    data10Day: null,
+    dataCurrent: null
   });
 };
 
 module.exports.search = function _callee(req, res) {
-  var response;
+  var data10Day, dataCurrent;
   return regeneratorRuntime.async(function _callee$(_context) {
     while (1) {
       switch (_context.prev = _context.next) {
         case 0:
           _context.next = 2;
-          return regeneratorRuntime.awrap(weatherApi.GET('hanoi', 10, 'metric or imperial'));
+          return regeneratorRuntime.awrap(weatherApi.Get10Day('hanoi', 10, 'metric or imperial'));
 
         case 2:
-          response = _context.sent;
-          console.log(response.data.list);
+          data10Day = _context.sent;
+          _context.next = 5;
+          return regeneratorRuntime.awrap(weatherApi.GetCurrent('hanoi', 'metric or imperial'));
 
-          if (response.data) {
+        case 5:
+          dataCurrent = _context.sent;
+          console.log(data10Day && dataCurrent);
+
+          if (data10Day) {
             res.render('weathers/index', {
               title: 'weather',
-              weathers: response.data,
+              data10Day: data10Day.data,
+              dataCurrent: dataCurrent.data,
               search: req.body.search
             });
           } else {
             res.render('weathers/index', {
               title: 'weather',
-              weathers: null,
+              data10Day: null,
+              dataCurrent: null,
               search: req.body.search
             });
           }
 
-        case 5:
+        case 8:
         case "end":
           return _context.stop();
       }

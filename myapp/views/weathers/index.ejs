@@ -17,23 +17,24 @@
                 </button> </form>
         </div>
     </div>
+    <% if(data10Day && dataCurrent){ %>
     <div>
-        <h1 class="text-6xl font-bold"> Hanoi</h1>
-        <span class="text-sm font-bold">Viet nam</span>
+        <h1 class="text-6xl font-bold"> <%=dataCurrent.name%></h1>
+        <span class="text-sm font-bold"><%=dataCurrent.sys.country%></span>
         <span class="text-sm">11/3, 12:14 AM</span>
         <div class="flex items-center justify-start">
-            <img src="http://openweathermap.org/img/wn/02d.png" />
-            <span class="text-xl font-bold">Clear</span>
+            <img src="http://openweathermap.org/img/wn/<%=dataCurrent.weather[0].icon%>.png" />
+            <span class="text-xl font-bold"><%=dataCurrent.weather[0].main%></span>
         </div>
         <div class="flex items-center justify-start gap-2">
             <img class="h-4" src="/images/up.svg" />
-            <span>21°</span>
+            <span><%=dataCurrent.main.temp_max%>°</span>
             <img class="h-4" src="/images/down.svg" />
-            <span>11°</span>
+            <span><%=dataCurrent.main.temp_min%>°</span>
         </div>
         <div class="flex items-center">
             <span class="text-6xl font-bold">
-                22°
+                <%=dataCurrent.main.temp%>°
             </span>
             <span class="ml-5 text-xl">F</span>
         </div>
@@ -45,19 +46,19 @@
             <div class="divide-y divide-gray-300">
                 <div class="py-2">Detail</div>
                 <div class="flex py-2 items-center">
-                    <img class="h-48" src="http://openweathermap.org/img/wn/02d@4x.png" />
+                    <img class="h-48" src="http://openweathermap.org/img/wn/<%=dataCurrent.weather[0].icon%>@4x.png" />
                     <div class="divide-y divide-gray-300 w-full">
                         <div class="flex justify-between py-2">
                             <span>Feels like</span>
-                            <span>22°</span>
+                            <span><%=dataCurrent.main.feels_like%>°</span>
                         </div>
                         <div class="flex justify-between py-2">
                             <span>Humidity</span>
-                            <span>85%</span>
+                            <span><%=dataCurrent.main.humidity%></span>
                         </div>
                         <div class="flex justify-between py-2">
                             <span>Visibility</span>
-                            <span>10.00 miles</span>
+                            <span><%=dataCurrent.visibility%> miles</span>
                         </div>
                         <div class="flex justify-between py-2">
                             <span>UV Index</span>
@@ -67,6 +68,7 @@
                 </div>
             </div>
         </div>
-       
+
     </div>
+    <% } %>
 </div>

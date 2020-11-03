@@ -5,24 +5,27 @@ module.exports.index = function (req, res) {
         title: 'weather',
         errors: null,
         search: null,
-        weathers: null
+        data10Day: null,
+        dataCurrent: null,
     });
 };
 
 module.exports.search = async function (req, res) {
-    const response = await weatherApi.GET('hanoi', 10, 'metric or imperial');
-    console.log(response.data.list);
-
-    if (response.data) {
+    const data10Day = await weatherApi.Get10Day('hanoi', 10, 'metric or imperial');
+    const dataCurrent = await weatherApi.GetCurrent('hanoi', 'metric or imperial');
+    console.log(data10Day && dataCurrent);
+    if (data10Day) {
         res.render('weathers/index', {
             title: 'weather',
-            weathers: response.data,
+            data10Day: data10Day.data,
+            dataCurrent: dataCurrent.data,
             search: req.body.search
         });
     } else {
         res.render('weathers/index', {
             title: 'weather',
-            weathers: null,
+            data10Day: null,
+            dataCurrent: null,
             search: req.body.search
         });
     }
