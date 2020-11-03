@@ -38,24 +38,9 @@
             </span>
             <span class="ml-5 text-xl">C</span>
         </div>
-        <div class="grid grid-cols-2 gap-12">
+        <div class="grid lg:grid-cols-2 gap-12">
             <div class="divide-y divide-gray-300">
-                <div class="py-2">Forecast</div>
-                <div class="py-2">
-                    <table>
-                        <% data10Day.list.forEach(function(data){ %>
-                        <tr class="border-b border-b-2 border-gray-200">
-                            <td class="w-1/2"><%=formatDateTime(data.dt)%></td>
-                            <td class="w-48"> <img src="http://openweathermap.org/img/wn/<%=data.weather[0].icon%>.png" /></td>
-                            <td class="w-64"><%=convertFtoC(data.temp.min)%>°</td>
-                            <td class="w-64"><%=convertFtoC(data.temp.max)%>°</td>
-                        </tr>
-                        <% }); %>
-                    </table>                    
-                </div>
-            </div>
-            <div class="divide-y divide-gray-300">
-                <div class="py-2">Detail</div>
+                <div class="py-2 font-bold">Detail</div>
                 <div class="flex py-2 items-center">
                     <img class="h-48" src="http://openweathermap.org/img/wn/<%=dataCurrent.weather[0].icon%>@4x.png" />
                     <div class="divide-y divide-gray-300 w-full">
@@ -76,6 +61,22 @@
                             <span>0 (Low)</span>
                         </div>
                     </div>
+                </div>
+            </div>
+            <div class="divide-y divide-gray-300">
+                <div class="py-2 font-bold">Forecast</div>
+                <div class="py-2">
+                    <table>
+                        <% data10Day.list.forEach(function(data){ %>
+                        <tr class="border-b border-b-2 border-gray-200">
+                            <td class="w-1/2"><%=formatDateTime(data.dt)%></td>
+                            <td class="w-48"> <img
+                                    src="http://openweathermap.org/img/wn/<%=data.weather[0].icon%>.png" /></td>
+                            <td class="w-64"><%=convertFtoC(data.temp.min)%>°</td>
+                            <td class="w-64"><%=convertFtoC(data.temp.max)%>°</td>
+                        </tr>
+                        <% }); %>
+                    </table>
                 </div>
             </div>
         </div>
