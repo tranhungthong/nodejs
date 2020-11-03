@@ -7,6 +7,7 @@ const app = express();
 const port = 3000;
 var loginRoute = require('./routes/auth.route');
 var bookRoute = require('./routes/book.route');
+var weatherRoute = require('./routes/weather.route');
 var authMiddleware = require('./middlewares/auth.middleware');
 
 app.set('layout', './layouts/layout')
@@ -35,6 +36,7 @@ app.get('/', authMiddleware.requireAuth, (req, res) => {
 
 app.use('/auth', loginRoute);
 app.use('/book', authMiddleware.requireAuth, bookRoute);
+app.use('/weather', authMiddleware.requireAuth, weatherRoute);
 
 
 app.listen(port, () => {
