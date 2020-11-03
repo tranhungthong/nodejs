@@ -13,8 +13,8 @@ module.exports.index = function (req, res) {
 module.exports.search = async function (req, res) {
     const data10Day = await weatherApi.Get10Day('hanoi', 10, 'metric or imperial');
     const dataCurrent = await weatherApi.GetCurrent('hanoi', 'metric or imperial');
-    console.log(data10Day && dataCurrent);
-    if (data10Day) {
+    console.log(dataCurrent);
+    if (data10Day && dataCurrent) {
         res.render('weathers/index', {
             title: 'weather',
             data10Day: data10Day.data,

@@ -17,7 +17,7 @@
                 </button> </form>
         </div>
     </div>
-    <% if(data10Day && dataCurrent){ %>
+    <% if(data10Day!=null && dataCurrent!=null){ %>
     <div>
         <h1 class="text-6xl font-bold"> <%=dataCurrent.name%></h1>
         <span class="text-sm font-bold"><%=dataCurrent.sys.country%></span>
@@ -41,7 +41,18 @@
         <div class="grid grid-cols-2 gap-12">
             <div class="divide-y divide-gray-300">
                 <div class="py-2">Forecast</div>
-                <div class="py-2"></div>
+                <div class="py-2">
+                    <table>
+                        <% data10Day.list.forEach(function(data){ %>
+                        <tr class="border-b border-b-2 border-gray-200">
+                            <td class="w-1/2"><%=formatDateTime(data.dt)%></td>
+                            <td class="w-48"> <img src="http://openweathermap.org/img/wn/<%=data.weather[0].icon%>.png" /></td>
+                            <td class="w-64"><%=data.temp.min%>°</td>
+                            <td class="w-64"><%=data.temp.max%>°</td>
+                        </tr>
+                        <% }); %>
+                    </table>                    
+                </div>
             </div>
             <div class="divide-y divide-gray-300">
                 <div class="py-2">Detail</div>
@@ -68,7 +79,6 @@
                 </div>
             </div>
         </div>
-
     </div>
     <% } %>
 </div>

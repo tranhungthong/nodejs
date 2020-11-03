@@ -38,6 +38,37 @@ app.use('/auth', loginRoute);
 app.use('/book', authMiddleware.requireAuth, bookRoute);
 app.use('/weather', authMiddleware.requireAuth, weatherRoute);
 
+app.locals.formatDateTime = function (dt) {
+    var day = new Date(dt * 1000).getDay();
+    var dayofweek = 'None';
+
+    switch (day) {
+        case 0:
+            dayofweek = 'Sunday';
+            break;
+        case 1:
+            dayofweek = 'Monday';
+            break;
+        case 2:
+            dayofweek = 'Tuesday';
+            break;
+        case 3:
+            dayofweek = 'Wednesday ';
+            break;
+        case 4:
+            dayofweek = 'Thurday';
+            break;
+        case 5:
+            dayofweek = 'Friday';
+            break;
+        case 6:
+            dayofweek = 'Saturday ';
+            break;
+    }
+
+    return dayofweek;
+}
+
 
 app.listen(port, () => {
     console.log(`Example app listening at http://localhost:${port}`)

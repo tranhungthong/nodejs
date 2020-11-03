@@ -28,9 +28,9 @@ module.exports.search = function _callee(req, res) {
 
         case 5:
           dataCurrent = _context.sent;
-          console.log(data10Day && dataCurrent);
+          console.log(dataCurrent);
 
-          if (data10Day) {
+          if (data10Day && dataCurrent) {
             res.render('weathers/index', {
               title: 'weather',
               data10Day: data10Day.data,
