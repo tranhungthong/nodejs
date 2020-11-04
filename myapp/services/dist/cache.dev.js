@@ -39,17 +39,18 @@ mongoose.Query.prototype.exec = function _callee() {
           return _context.abrupt("return", exec.apply(this, _args));
 
         case 2:
-          key = JSON.stringify(Object.assign({}, this.getQuery(), {
+          key = JSON.stringify(Object.assign({}, this.getFilter(), {
             collection: this.mongooseCollection.name
           }));
-          _context.next = 5;
+          client.expire(this.hashKey, 10);
+          _context.next = 6;
           return regeneratorRuntime.awrap(client.hget(this.hashKey, key));
 
-        case 5:
+        case 6:
           cachedValue = _context.sent;
 
           if (!cachedValue) {
-            _context.next = 10;
+            _context.next = 11;
             break;
           }
 
@@ -59,17 +60,17 @@ mongoose.Query.prototype.exec = function _callee() {
             return new _this.model(doc);
           }) : new this.model(parsedCache));
 
-        case 10:
-          _context.next = 12;
+        case 11:
+          _context.next = 13;
           return regeneratorRuntime.awrap(exec.apply(this, _args));
 
-        case 12:
+        case 13:
           result = _context.sent;
-          client.hmset(this.hashKey, key, JSON.stringify(result), 'EX', 10);
+          client.hmset(this.hashKey, key, JSON.stringify(result));
           console.log('Data Source: Database');
           return _context.abrupt("return", result);
 
-        case 16:
+        case 17:
         case "end":
           return _context.stop();
       }

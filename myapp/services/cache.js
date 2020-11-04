@@ -21,9 +21,11 @@ mongoose.Query.prototype.exec = async function() {
         return exec.apply(this, arguments);
     }
 
-    const key = JSON.stringify(Object.assign({}, this.getQuery(), {
+    const key = JSON.stringify(Object.assign({}, this.getFilter(), {
         collection: this.mongooseCollection.name,
     }));
+
+    client.expire(this.hashKey,10);
 
     const cachedValue = await client.hget(this.hashKey, key);
 
@@ -39,7 +41,7 @@ mongoose.Query.prototype.exec = async function() {
 
     const result = await exec.apply(this, arguments);
     
-    client.hmset(this.hashKey, key, JSON.stringify(result), 'EX', 10);
+    client.hmset(this.hashKey, key, JSON.stringify(result));
 
     console.log('Data Source: Database');
     return result;
