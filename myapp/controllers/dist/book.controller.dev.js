@@ -232,34 +232,74 @@ module.exports.getABook = function _callee5(req, res) {
 };
 
 module.exports.search = function (req, res) {
-  // get data
+  //production redis url
+  var redis_url = process.env.REDIS_URL; // redis setup
+  // let client = require('redis').createClient(redis_url);
+
+  var Redis = require('ioredis');
+
+  var redis = new Redis(redis_url); // get data
+
   var input = '^.*' + req.body.search + '.*';
-  Book.find({
-    $and: [{
-      $or: [{
-        title: {
-          $regex: new RegExp(input, "i")
-        }
-      }, {
-        author: {
-          $regex: new RegExp(input, "i")
-        }
-      }]
-    }, {
-      is_del: false
-    }]
-  }, function (err, data) {
-    if (data.length > 0) {
+  var cacheId = "".concat(req.signedCookies.userid, "_search_").concat(input); // GET representative deatils
+
+  redis.expire(cacheId, 60);
+  redis.get(cacheId, function (error, rep) {
+    var data = null;
+
+    if (error) {
+      res.status(500).json({
+        error: error
+      });
+      return;
+    } // read data from cache and parse to JSON
+
+
+    if (rep) {
+      data = JSON.parse(rep);
+      console.log('get data from cache');
       res.render('books/index', {
         books: data,
         search: req.body.search
       });
-      return;
-    }
+    } else {
+      console.log('get data from database');
+      Book.find({
+        $and: [{
+          $or: [{
+            title: {
+              $regex: new RegExp(input, "i")
+            }
+          }, {
+            author: {
+              $regex: new RegExp(input, "i")
+            }
+          }]
+        }, {
+          is_del: false
+        }]
+      }, function (err, data) {
+        if (data.length > 0) {
+          res.render('books/index', {
+            books: data,
+            search: req.body.search
+          });
+          redis.set(cacheId, JSON.stringify(data), function (error, result) {
+            if (error) {
+              console.log(error);
+              res.status(500).json({
+                error: error
+              });
+            }
+          });
+          return;
+        }
 
-    res.render('books/index', {
-      books: null,
-      search: req.body.search
-    });
+        res.render('books/index', {
+          books: null,
+          search: req.body.search
+        });
+      });
+    }
   });
 };
