@@ -142,70 +142,35 @@ module.exports.getABook = async function (req, res) {
     res.json(globals.success);
 };
 
-module.exports.search = function (req, res) {
-    //production redis url
-    let redis_url = process.env.REDIS_URL;
-
-    // redis setup
-    // let client = require('redis').createClient(redis_url);
-    let Redis = require('ioredis');
-    let redis = new Redis(redis_url);
-
+module.exports.search = async function (req, res) {
     // get data
     var input = '^.*' + req.body.search + '.*';
-    var cacheId = `${req.signedCookies.userid}_search_${input}`;
 
-    // GET representative deatils
-    redis.expire(cacheId, 60);
-    redis.get(cacheId, (error, rep) => {
-        var data = null;
-        if (error) {
-            res.status(500).json({ error: error });
-            return;
-        }
+    var data = await Book.find({
+        $and: [
+            {
+                $or: [
+                    { title: { $regex: new RegExp(input, "i") } },
+                    { author: { $regex: new RegExp(input, "i") } }
+                ]
+            }, {
+                is_del: false
+            }
+        ]
 
-        // read data from cache and parse to JSON
-        if (rep) {
-            data = JSON.parse(rep);
-            console.log('get data from cache');
+    }, function (err, data) {
+        if (data.length > 0) {
             res.render('books/index', {
                 books: data,
                 search: req.body.search
             });
-        } else {
-            console.log('get data from database');
-            Book.find({
-                $and: [
-                    {
-                        $or: [
-                            { title: { $regex: new RegExp(input, "i") } },
-                            { author: { $regex: new RegExp(input, "i") } }
-                        ]
-                    }, {
-                        is_del: false
-                    }
-                ]
 
-            }, function (err, data) {
-                if (data.length > 0) {
-                    res.render('books/index', {
-                        books: data,
-                        search: req.body.search
-                    });
-                    redis.set(cacheId, JSON.stringify(data), (error, result) => {
-                        if (error) {
-                            console.log(error)
-                            res.status(500).json({ error: error });
-                        }
-                    })
-                    return;
-                }
-
-                res.render('books/index', {
-                    books: null,
-                    search: req.body.search
-                });
-            });
+            return;
         }
-    })
+
+        res.render('books/index', {
+            books: null,
+            search: req.body.search
+        });
+    }).cache({ key: `${req.signedCookies.userid}_search_${req.body.search}` });
 };

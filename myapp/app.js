@@ -1,6 +1,7 @@
 const express = require('express');
 require('dotenv').config();
 require('./database');
+require('./services/cache');
 const expressLayouts = require('express-ejs-layouts')
 var path = require('path');
 const app = express();
@@ -9,7 +10,6 @@ var loginRoute = require('./routes/auth.route');
 var bookRoute = require('./routes/book.route');
 var weatherRoute = require('./routes/weather.route');
 var authMiddleware = require('./middlewares/auth.middleware');
-var fahrenheitToCelsius = require('fahrenheit-to-celsius');
 
 app.set('layout', './layouts/layout')
 app.use(expressLayouts)
