@@ -14,8 +14,14 @@ var exec = mongoose.Query.prototype.exec;
 mongoose.Query.prototype.cache = function () {
   var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
   this.enableCache = true;
-  var hashKey = "".concat(options.key.signedCookies.userid, "_").concat(options.key.baseUrl.replace('/', ''));
-  this.key = "".concat(hashKey, "_").concat(options.input);
+  var hashKey = "".concat(options.userid, "_").concat(options.page);
+
+  if (options.input != null) {
+    this.key = "".concat(hashKey, "_").concat(options.input);
+  } else {
+    this.key = hashKey;
+  }
+
   this.hashKey = JSON.stringify(hashKey || 'default');
   return this;
 }; // create new cache function on prototype
@@ -43,16 +49,15 @@ mongoose.Query.prototype.exec = function _callee() {
           // const key = JSON.stringify(Object.assign({}, this.getQuery(), {
           //     collection: this.mongooseCollection.name,
           // }));
-          console.log(JSON.stringify(this.key));
-          client.expire(this.hashKey, 10);
-          _context.next = 6;
+          client.expire(this.hashKey, 600);
+          _context.next = 5;
           return regeneratorRuntime.awrap(client.hget(this.hashKey, this.key));
 
-        case 6:
+        case 5:
           cachedValue = _context.sent;
 
           if (!cachedValue) {
-            _context.next = 11;
+            _context.next = 10;
             break;
           }
 
@@ -62,17 +67,17 @@ mongoose.Query.prototype.exec = function _callee() {
             return new _this.model(doc);
           }) : new this.model(parsedCache));
 
-        case 11:
-          _context.next = 13;
+        case 10:
+          _context.next = 12;
           return regeneratorRuntime.awrap(exec.apply(this, _args));
 
-        case 13:
+        case 12:
           result = _context.sent;
           client.hmset(this.hashKey, this.key, JSON.stringify(result));
           console.log('Data Source: Database');
           return _context.abrupt("return", result);
 
-        case 17:
+        case 16:
         case "end":
           return _context.stop();
       }
@@ -81,7 +86,8 @@ mongoose.Query.prototype.exec = function _callee() {
 };
 
 module.exports = {
-  clearCache: function clearCache(hashKey) {
+  clearCache: function clearCache(options) {
+    var hashKey = "".concat(options.userid, "_").concat(options.page);
     console.log('Cache cleaned');
     client.del(JSON.stringify(hashKey));
   }

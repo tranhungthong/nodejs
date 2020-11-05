@@ -9,7 +9,7 @@ router.get('/', controller.index);
 router.get('/get', controller.getABook);
 router.post('/', controller.search);
 router.post('/add', upload.single('cover'), clearCacheByKey, controller.add);
-router.post('/update', upload.single('cover'), controller.update);
-router.post('/delete', controller.delete);
+router.post('/update', upload.single('cover'), clearCacheByKey, controller.update);
+router.post('/delete', clearCacheByKey, controller.delete);
 
 module.exports = router;

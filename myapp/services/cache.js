@@ -10,8 +10,14 @@ const exec = mongoose.Query.prototype.exec;
 
 mongoose.Query.prototype.cache = function (options = {}) {
     this.enableCache = true;
-    var hashKey = `${options.key.signedCookies.userid}_${options.key.baseUrl.replace('/', '')}`
-    this.key = `${hashKey}_${options.input}`
+    var hashKey = `${options.userid}_${options.page}`
+
+    if (options.input != null) {
+        this.key = `${hashKey}_${options.input}`
+    } else {
+        this.key = hashKey;
+    }
+
     this.hashKey = JSON.stringify(hashKey || 'default');
 
     return this;
@@ -26,10 +32,7 @@ mongoose.Query.prototype.exec = async function () {
     // const key = JSON.stringify(Object.assign({}, this.getQuery(), {
     //     collection: this.mongooseCollection.name,
     // }));
-
-    console.log(JSON.stringify(this.key));
-
-    client.expire(this.hashKey, 10);
+    client.expire(this.hashKey, 600);
 
     const cachedValue = await client.hget(this.hashKey, this.key);
 
@@ -54,8 +57,9 @@ mongoose.Query.prototype.exec = async function () {
 
 
 module.exports = {
-    clearCache(hashKey) {
-        console.log('Cache cleaned')
+    clearCache(options) {
+        var hashKey = `${options.userid}_${options.page}`
+        console.log('Cache cleaned');
         client.del(JSON.stringify(hashKey));
     }
 }

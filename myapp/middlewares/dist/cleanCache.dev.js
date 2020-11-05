@@ -12,7 +12,10 @@ module.exports = {
           case 0:
             afterResponse = function afterResponse() {
               res.removeListener('finish', afterResponse);
-              if (res.statusCode < 400) clearCache("".concat(req.signedCookies.userid, "_").concat(req.baseUrl.replace('/', '')));
+              if (res.statusCode < 400) clearCache({
+                userid: req.signedCookies.userid,
+                page: req.baseUrl.replace('/', '')
+              });
             };
 
             res.on('finish', afterResponse);
