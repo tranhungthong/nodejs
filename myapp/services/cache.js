@@ -8,7 +8,7 @@ client.hget = util.promisify(client.hget);
 // Overriding the Default Mongoose Exec Function
 const exec = mongoose.Query.prototype.exec;
 
-mongoose.Query.prototype.cache = function(options = {}) {
+mongoose.Query.prototype.cache = function (options = {}) {
     this.enableCache = true;
     this.hashKey = JSON.stringify(options.key || 'default');
 
@@ -16,7 +16,8 @@ mongoose.Query.prototype.cache = function(options = {}) {
 };
 
 // create new cache function on prototype
-mongoose.Query.prototype.exec = async function() {
+mongoose.Query.prototype.exec = async function () {
+    console.log(`enableCache: ${this.enableCache}`)
     if (!this.enableCache) {
         return exec.apply(this, arguments);
     }
@@ -25,7 +26,7 @@ mongoose.Query.prototype.exec = async function() {
         collection: this.mongooseCollection.name,
     }));
 
-    client.expire(this.hashKey,10);
+    client.expire(this.hashKey, 600);
 
     const cachedValue = await client.hget(this.hashKey, key);
 
@@ -34,13 +35,13 @@ mongoose.Query.prototype.exec = async function() {
 
         console.log('Data Source: Cache');
 
-        return Array.isArray(parsedCache) 
-                ?  parsedCache.map(doc => new this.model(doc)) 
-                :  new this.model(parsedCache);
+        return Array.isArray(parsedCache)
+            ? parsedCache.map(doc => new this.model(doc))
+            : new this.model(parsedCache);
     }
 
     const result = await exec.apply(this, arguments);
-    
+
     client.hmset(this.hashKey, key, JSON.stringify(result));
 
     console.log('Data Source: Database');

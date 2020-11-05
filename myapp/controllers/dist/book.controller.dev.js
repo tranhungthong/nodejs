@@ -6,6 +6,9 @@ var dateFormat = require('dateformat');
 
 var globals = require('../global');
 
+var _require = require('../services/cache'),
+    clearCache = _require.clearCache;
+
 module.exports.index = function _callee(req, res) {
   return regeneratorRuntime.async(function _callee$(_context) {
     while (1) {
@@ -86,9 +89,11 @@ module.exports.add = function _callee2(req, res) {
           }));
 
         case 10:
+          // clear cache
+          clearCache("".concat(req.signedCookies.userid, "_search"));
           res.json(globals.success);
 
-        case 11:
+        case 12:
         case "end":
           return _context2.stop();
       }
@@ -254,27 +259,31 @@ module.exports.search = function _callee6(req, res) {
             }, {
               is_del: false
             }]
-          }, function (err, data) {
-            if (data.length > 0) {
-              res.render('books/index', {
-                books: data,
-                search: req.body.search
-              });
-              return;
-            }
-
-            res.render('books/index', {
-              books: null,
-              search: req.body.search
-            });
           }).cache({
-            key: "".concat(req.signedCookies.userid, "_search_").concat(req.body.search)
+            key: "".concat(req.signedCookies.userid, "_search")
           }));
 
         case 3:
           data = _context6.sent;
 
-        case 4:
+          if (!(data.length > 0)) {
+            _context6.next = 7;
+            break;
+          }
+
+          res.render('books/index', {
+            books: data,
+            search: req.body.search
+          });
+          return _context6.abrupt("return");
+
+        case 7:
+          res.render('books/index', {
+            books: null,
+            search: req.body.search
+          });
+
+        case 8:
         case "end":
           return _context6.stop();
       }

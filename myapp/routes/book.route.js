@@ -3,6 +3,7 @@ var router = express.Router();
 var controller = require('../controllers/book.controller');
 var multer = require('multer');
 var upload = multer({ dest: './public/upload/books/' })
+var { clearCacheID } = require('../middlewares/cleanCache')
 
 router.get('/', controller.index);
 router.get('/get', controller.getABook);

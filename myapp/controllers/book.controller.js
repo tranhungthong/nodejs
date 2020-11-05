@@ -1,6 +1,7 @@
 var Book = require('../models/book.model');
 var dateFormat = require('dateformat');
 var globals = require('../global')
+const { clearCache } = require('../services/cache');
 
 
 module.exports.index = async function (req, res) {
@@ -56,7 +57,10 @@ module.exports.add = async function (req, res) {
             res.json(globals.error);
             return;
         }
-    })
+    });
+
+    // clear cache
+    clearCache(`${req.signedCookies.userid}_search`);
 
     res.json(globals.success);
 };
@@ -158,19 +162,19 @@ module.exports.search = async function (req, res) {
             }
         ]
 
-    }, function (err, data) {
-        if (data.length > 0) {
-            res.render('books/index', {
-                books: data,
-                search: req.body.search
-            });
+    }).cache({ key: `${req.signedCookies.userid}_search` });
 
-            return;
-        }
-
+    if (data.length > 0) {
         res.render('books/index', {
-            books: null,
+            books: data,
             search: req.body.search
         });
-    }).cache({ key: `${req.signedCookies.userid}_search_${req.body.search}` });
+
+        return;
+    }
+
+    res.render('books/index', {
+        books: null,
+        search: req.body.search
+    });
 };

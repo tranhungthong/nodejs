@@ -11,6 +11,10 @@ var multer = require('multer');
 var upload = multer({
   dest: './public/upload/books/'
 });
+
+var _require = require('../middlewares/cleanCache'),
+    clearCacheID = _require.clearCacheID;
+
 router.get('/', controller.index);
 router.get('/get', controller.getABook);
 router.post('/', controller.search);
