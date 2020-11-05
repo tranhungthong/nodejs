@@ -60,7 +60,7 @@ module.exports.add = async function (req, res) {
     });
 
     // clear cache
-    clearCache(`${req.signedCookies.userid}_search`);
+    //clearCache(`${req.signedCookies.userid}_search`);
 
     res.json(globals.success);
 };
@@ -148,7 +148,8 @@ module.exports.getABook = async function (req, res) {
 
 module.exports.search = async function (req, res) {
     // get data
-    var input = '^.*' + req.body.search + '.*';
+    var input = '^.*' + req.body.search + '.*$';
+    console.log(req.baseUrl.replace('/', ''));
 
     var data = await Book.find({
         $and: [
@@ -162,7 +163,7 @@ module.exports.search = async function (req, res) {
             }
         ]
 
-    }).cache({ key: `${req.signedCookies.userid}_search` });
+    }).cache({ key: req, input: req.body.search });
 
     if (data.length > 0) {
         res.render('books/index', {

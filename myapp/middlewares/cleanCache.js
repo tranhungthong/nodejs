@@ -1,8 +1,14 @@
-const { cleanCache } = require('../services/cache');
+const { clearCache } = require('../services/cache');
 
-module.exports = async (req, res, next) => {
-    // wait for route handler to finish running
-    await next(); 
-    
-    clearCache( `${req.signedCookies.userid}_search`);
-}
+module.exports = {
+  async clearCacheByKey(req, res, next) {
+    const afterResponse = () => {
+      res.removeListener('finish', afterResponse);
+
+      if (res.statusCode < 400) clearCache(`${req.signedCookies.userid}_${req.baseUrl.replace('/', '')}`);
+    };
+
+    res.on('finish', afterResponse);
+    next();
+  },
+};

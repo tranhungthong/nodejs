@@ -10,25 +10,28 @@ const exec = mongoose.Query.prototype.exec;
 
 mongoose.Query.prototype.cache = function (options = {}) {
     this.enableCache = true;
-    this.hashKey = JSON.stringify(options.key || 'default');
+    var hashKey = `${options.key.signedCookies.userid}_${options.key.baseUrl.replace('/', '')}`
+    this.key = `${hashKey}_${options.input}`
+    this.hashKey = JSON.stringify(hashKey || 'default');
 
     return this;
 };
 
 // create new cache function on prototype
 mongoose.Query.prototype.exec = async function () {
-    console.log(`enableCache: ${this.enableCache}`)
     if (!this.enableCache) {
         return exec.apply(this, arguments);
     }
 
-    const key = JSON.stringify(Object.assign({}, this.getFilter(), {
-        collection: this.mongooseCollection.name,
-    }));
+    // const key = JSON.stringify(Object.assign({}, this.getQuery(), {
+    //     collection: this.mongooseCollection.name,
+    // }));
 
-    client.expire(this.hashKey, 600);
+    console.log(JSON.stringify(this.key));
 
-    const cachedValue = await client.hget(this.hashKey, key);
+    client.expire(this.hashKey, 10);
+
+    const cachedValue = await client.hget(this.hashKey, this.key);
 
     if (cachedValue) {
         const parsedCache = JSON.parse(cachedValue);
@@ -42,7 +45,7 @@ mongoose.Query.prototype.exec = async function () {
 
     const result = await exec.apply(this, arguments);
 
-    client.hmset(this.hashKey, key, JSON.stringify(result));
+    client.hmset(this.hashKey, this.key, JSON.stringify(result));
 
     console.log('Data Source: Database');
     return result;

@@ -90,10 +90,10 @@ module.exports.add = function _callee2(req, res) {
 
         case 10:
           // clear cache
-          clearCache("".concat(req.signedCookies.userid, "_search"));
+          //clearCache(`${req.signedCookies.userid}_search`);
           res.json(globals.success);
 
-        case 12:
+        case 11:
         case "end":
           return _context2.stop();
       }
@@ -243,8 +243,9 @@ module.exports.search = function _callee6(req, res) {
       switch (_context6.prev = _context6.next) {
         case 0:
           // get data
-          input = '^.*' + req.body.search + '.*';
-          _context6.next = 3;
+          input = '^.*' + req.body.search + '.*$';
+          console.log(req.baseUrl.replace('/', ''));
+          _context6.next = 4;
           return regeneratorRuntime.awrap(Book.find({
             $and: [{
               $or: [{
@@ -260,14 +261,15 @@ module.exports.search = function _callee6(req, res) {
               is_del: false
             }]
           }).cache({
-            key: "".concat(req.signedCookies.userid, "_search")
+            key: req,
+            input: req.body.search
           }));
 
-        case 3:
+        case 4:
           data = _context6.sent;
 
           if (!(data.length > 0)) {
-            _context6.next = 7;
+            _context6.next = 8;
             break;
           }
 
@@ -277,13 +279,13 @@ module.exports.search = function _callee6(req, res) {
           });
           return _context6.abrupt("return");
 
-        case 7:
+        case 8:
           res.render('books/index', {
             books: null,
             search: req.body.search
           });
 
-        case 8:
+        case 9:
         case "end":
           return _context6.stop();
       }

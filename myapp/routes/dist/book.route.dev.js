@@ -13,12 +13,12 @@ var upload = multer({
 });
 
 var _require = require('../middlewares/cleanCache'),
-    clearCacheID = _require.clearCacheID;
+    clearCacheByKey = _require.clearCacheByKey;
 
 router.get('/', controller.index);
 router.get('/get', controller.getABook);
 router.post('/', controller.search);
-router.post('/add', upload.single('cover'), controller.add);
+router.post('/add', upload.single('cover'), clearCacheByKey, controller.add);
 router.post('/update', upload.single('cover'), controller.update);
 router.post('/delete', controller["delete"]);
 module.exports = router;
