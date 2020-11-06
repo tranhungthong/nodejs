@@ -20,12 +20,13 @@ Tài liệu này trình bày cách cài đặt các extention như Tailwindcss, 
 
 ## 1. Installing
 - <strong>Tailwind</strong>: Framework css
+CSS Framework ra đời như một công cụ hỗ trợ các designer thiết kế giao diện website nhanh chóng và đẹp mắt với thời gian ngắn nhất nhưng ít lỗi nhất. CSS Framework là một bộ mã nguồn CSS đã được viết một số chức năng nhất định và khai báo mỗi chức năng đó vào một class riêng, để người sử dụng sẽ dễ dàng áp dụng nó vào dự án của họ bằng cách thêm class của thành phần muốn sử dụng vào phần tử họ cần áp dụng lên, ví dụ như thêm style cho một nút bấm chẳng hạn.
     ```
     # Using npm
     npm install tailwindcss --dev   
     ``` 
 
-- <strong>cookie-parser</strong>: Parser cookie từ header
+- <strong>cookie-parser</strong>: Module dùng để đọc cookie từ request
     ```
     $ npm install cookie-parser   
     ``` 
@@ -35,12 +36,12 @@ Tài liệu này trình bày cách cài đặt các extention như Tailwindcss, 
     $ npm install dateformat
     ``` 
 
-- <strong>dotenv</strong>: Module dùng để load biến từ file .env
+- <strong>dotenv</strong>: Nếu bạn quan tâm đến việc làm cho ứng dụng của bạn chạy trên bất kỳ máy tính hoặc cloud computing nào , thì bạn nên sử dụng Environment Variables để setting các giá trị cho từng môi trường mà bạn mong muốn.
     ```
     $ npm install dotenv
     ``` 
 
-- <strong>ejs</strong>: Quản lý view trong Nodejs
+- <strong>ejs</strong>: EJS là viết tắt của "Embedded JavaScript templating", đây là một thư viện, được sử dụng để phân tích các tập tin ejs, và tạo ra HTML trả về cho client (Trình duyệt).
     ```
     $ npm install ejs
     ``` 
@@ -64,7 +65,34 @@ Tài liệu này trình bày cách cài đặt các extention như Tailwindcss, 
     ```
     Download bộ cài đặt từ https://www.mongodb.com/ và cài đặt
     ``` 
+- <strong>Redis</strong> 
+là một hệ thống dùng để lưu trữ dữ liệu dưới dạng Key - Value mạnh mẽ. Nếu nói Redis như một bộ nhớ Cache, một Database hoặc Message Broker cũng không sai. Mọi thông tin, dữ liệu đều được redis ghi trên ram thay vì ổ đĩa hay ổ SSD như bình thường. Nhờ việc không cần dùng ổ đĩa hay ổ SSD nên Redis sẽ rút ngắn thời gian tìm kiếm, truy cập dữ liệu. Vì thế mà tốc độ đọc và ghi dữ liệu trên Redis rất nhanh, rất lý tưởng.
 
+    Ưu điểm thu hút các lập trình viên săn đón Redis là gì? Ứng dụng redis, người dùng sẽ được “tận hưởng” nhiều điểm cộng không thể nào lý tưởng hơn:
+
+    Redis hỗ trợ người dùng có thể thêm mới hoặc loại bỏ dữ liệu trong thời gian ngắn.
+
+    - Redis có thể nhận và ghi dữ liệu lên Ram và có thể xuất hiện trên Disk tại một thời điểm.
+
+    - Key của Redis là một string nhưng được hỗ trợ sử dụng linh hoạt đa dạng các value như List, Sorted sets, Sets,...
+
+    - Dễ dàng di chuyển key từ cơ sở dữ liệu này sang cơ sở dữ liệu khác.
+
+    - Redis được trang bị nhiều lệnh đặc biệt. Vì thế mà Redis rất nhanh trong quá trình lấy và ghi dữ liệu.
+
+    - Tính năng Master - slave thích hợp cho người dùng muốn gia tăng sự an toàn cho dữ liệu, mở rộng hoặc thu hẹp không gian lưu trữ Data.
+
+    - Người dùng có thể tìm kiếm dữ liệu nhanh chóng nhất.
+
+    - Redis cho phép người dùng sử dụng linh hoạt nhiều kiểu dữ liệu khác nhau.
+
+    - Người dùng có thể để key tự động xóa đi ở một thời gian nhất định nào đó.
+
+    Nhiều ưu điểm là thế, nhưng không phải Redis là một hệ thống lưu trữ dữ liệu hoàn hảo. Vậy nhược điểm của Redis là gì? Khi lượng file cache lớn thì máy chủ Server sẽ làm thiếu Ram. 
+
+    ```
+    $ npm install redis
+    ``` 
 
 ## 2. Setting
 ### Tailwind
