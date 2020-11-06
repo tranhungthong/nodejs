@@ -10,6 +10,7 @@
 - [3.3. Sửa lại màn hình login như dưới](#3.3.-Sửa-lại-màn-hình-login-như-dưới)
 - [3.4. Thiết kế màn Book list](#3.4.-Thiết-kế-màn-Book-list)
 - [3.5. Màn hình edit và add book](#3.5.-Màn-hình-edit-và-add-book)
+- [3.6. Màn hình hiển thị thông tin thời tiết](#3.6.-Màn-hình-hiển-thị-thông-tin-thời-tiết)
 
 [4. Implement Redis](#4.-Implement-Redis)
 
@@ -67,6 +68,12 @@ CSS Framework ra đời như một công cụ hỗ trợ các designer thiết k
     ```
     Download bộ cài đặt từ https://www.mongodb.com/ và cài đặt
     ``` 
+
+- <strong>Axios</strong> là một HTTP client được viết dựa trên Promises được dùng để hỗ trợ cho việc xây dựng các ứng dụng API . Axios có thể được sử dụng ở cả browser hoặc Node. js. Axios có thể hoạt động trong hầu hết tất các trình duyệt web hiện đại.
+    ```
+    $ npm install axios
+    ``` 
+
 - <strong>Redis</strong> 
 là một hệ thống dùng để lưu trữ dữ liệu dưới dạng Key - Value mạnh mẽ. Nếu nói Redis như một bộ nhớ Cache, một Database hoặc Message Broker cũng không sai. Mọi thông tin, dữ liệu đều được redis ghi trên ram thay vì ổ đĩa hay ổ SSD như bình thường. Nhờ việc không cần dùng ổ đĩa hay ổ SSD nên Redis sẽ rút ngắn thời gian tìm kiếm, truy cập dữ liệu. Vì thế mà tốc độ đọc và ghi dữ liệu trên Redis rất nhanh, rất lý tưởng.
 
@@ -1555,6 +1562,188 @@ Gồm các file dưới đây
 
     };
     ```
+## 3.6. Màn hình hiển thị thông tin thời tiết
+- views/weather/index.js
+    ```html
+    <div class="w-full mt-5 mb-5 mr-5 ml-5">
+        <div class="grid grid-cols-1">
+            <p class="text-2xl">Weather</p>
+        </div>
+        <div class="flex mb-4">
+            <div class="pt-2 relative text-gray-600 w-1/4 h-12">
+                <form method="POST">
+                    <input class="input" type="search" name="search" placeholder="Search" value="<%=search%>">
+                    <button id="btnSearch" type="submit" class="absolute right-0 top-0 mt-4 mr-4">
+                        <svg class="text-gray-600 h-4 w-4 fill-current" xmlns="http://www.w3.org/2000/svg"
+                            xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Capa_1" x="0px" y="0px"
+                            viewBox="0 0 56.966 56.966" style="enable-background:new 0 0 56.966 56.966;"
+                            xml:space="preserve" width="512px" height="512px">
+                            <path
+                                d="M55.146,51.887L41.588,37.786c3.486-4.144,5.396-9.358,5.396-14.786c0-12.682-10.318-23-23-23s-23,10.318-23,23  s10.318,23,23,23c4.761,0,9.298-1.436,13.177-4.162l13.661,14.208c0.571,0.593,1.339,0.92,2.162,0.92  c0.779,0,1.518-0.297,2.079-0.837C56.255,54.982,56.293,53.08,55.146,51.887z M23.984,6c9.374,0,17,7.626,17,17s-7.626,17-17,17  s-17-7.626-17-17S14.61,6,23.984,6z" />
+                        </svg>
+                    </button> </form>
+            </div>
+        </div>
+        <% if(data10Day!=null && dataCurrent!=null){ %>
+        <div>
+            <h1 class="text-6xl font-bold"> <%=dataCurrent.name%></h1>
+            <span class="text-sm font-bold"><%=dataCurrent.sys.country%></span>
+            <span class="text-sm">11/3, 12:14 AM</span>
+            <div class="flex items-center justify-start">
+                <img src="http://openweathermap.org/img/wn/<%=dataCurrent.weather[0].icon%>.png" />
+                <span class="text-xl font-bold"><%=dataCurrent.weather[0].main%></span>
+            </div>
+            <div class="flex items-center justify-start gap-2">
+                <img class="h-4" src="/images/up.svg" />
+                <span><%=convertFtoC(dataCurrent.main.temp_max)%>°</span>
+                <img class="h-4" src="/images/down.svg" />
+                <span><%=convertFtoC(dataCurrent.main.temp_min)%>°</span>
+            </div>
+            <div class="flex items-center">
+                <span class="text-6xl font-bold">
+                    <%=convertFtoC(dataCurrent.main.temp)%>°
+                </span>
+                <span class="ml-5 text-xl">C</span>
+            </div>
+            <div class="grid lg:grid-cols-2 gap-12">
+                <div class="divide-y divide-gray-300">
+                    <div class="py-2 font-bold">Detail</div>
+                    <div class="flex py-2 items-center">
+                        <img class="h-48" src="http://openweathermap.org/img/wn/<%=dataCurrent.weather[0].icon%>@4x.png" />
+                        <div class="divide-y divide-gray-300 w-full">
+                            <div class="flex justify-between py-2">
+                                <span>Feels like</span>
+                                <span><%=convertFtoC(dataCurrent.main.feels_like)%>°</span>
+                            </div>
+                            <div class="flex justify-between py-2">
+                                <span>Humidity</span>
+                                <span><%=dataCurrent.main.humidity%>%</span>
+                            </div>
+                            <div class="flex justify-between py-2">
+                                <span>Visibility</span>
+                                <span><%=dataCurrent.visibility%> miles</span>
+                            </div>
+                            <div class="flex justify-between py-2">
+                                <span>UV Index</span>
+                                <span>0 (Low)</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="divide-y divide-gray-300">
+                    <div class="py-2 font-bold">Forecast</div>
+                    <div class="py-2">
+                        <table>
+                            <% data10Day.list.forEach(function(data){ %>
+                            <tr class="border-b border-b-2 border-gray-200">
+                                <td class="w-1/2"><%=formatDateTime(data.dt)%></td>
+                                <td class="w-48"> <img
+                                        src="http://openweathermap.org/img/wn/<%=data.weather[0].icon%>.png" /></td>
+                                <td class="w-64"><%=convertFtoC(data.temp.min)%>°</td>
+                                <td class="w-64"><%=convertFtoC(data.temp.max)%>°</td>
+                            </tr>
+                            <% }); %>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <% } %>
+    </div>
+    ```
+- module dùng để gọi api
+    ```js
+    const axios = require('axios');
+
+    // lấy thông tin thời tiết 10 ngày tới
+    module.exports.Get10Day = (city, count, units) => {
+        return axios({
+            method: "GET",
+            url: `https://community-open-weather-map.p.rapidapi.com/forecast/daily`,
+            headers: {
+                'x-rapidapi-host': 'community-open-weather-map.p.rapidapi.com',
+                'x-rapidapi-key': '92f91eef38mshc7e78513deee828p13e659jsn5b7b8fadb899',
+                'useQueryString': true
+            },
+            params: {
+                q: city,
+                cnt: count,
+                units: units
+            }
+        })
+    }
+
+    // lấy thông tin thời tiết hiện tại
+    module.exports.GetCurrent = (city, units) => {
+        return axios({
+            method: "GET",
+            url: `https://rapidapi.p.rapidapi.com/weather`,
+            headers: {
+                'x-rapidapi-host': 'community-open-weather-map.p.rapidapi.com',
+                'x-rapidapi-key': '92f91eef38mshc7e78513deee828p13e659jsn5b7b8fadb899',
+                'useQueryString': true
+            },
+            params: {
+                q: city,
+                units: units
+            }
+        })
+    }
+    ```
+- controllers/weather.controller.js
+    ```js
+    const weatherApi = require('../weatherApiCommon')
+
+    module.exports.index = function (req, res) {
+        res.render('weathers/index', {
+            title: 'weather',
+            errors: null,
+            search: null,
+            data10Day: null,
+            dataCurrent: null,
+        });
+    };
+
+    module.exports.search = async function (req, res) {
+        var city = req.body.search;
+        const data10Day = await weatherApi.Get10Day(city, 10, 'metric or imperial');
+        const dataCurrent = await weatherApi.GetCurrent(city, 'metric or imperial');
+
+        if (data10Day && dataCurrent) {
+            res.render('weathers/index', {
+                title: 'weather',
+                data10Day: data10Day.data,
+                dataCurrent: dataCurrent.data,
+                search: req.body.search
+            });
+        } else {
+            res.render('weathers/index', {
+                title: 'weather',
+                data10Day: null,
+                dataCurrent: null,
+                search: req.body.search
+            });
+        }
+    };
+    ```
+
+- routes/weather.route.js
+    ```js
+    var express = require('express');
+    var router = express.Router();
+    var controller = require('../controllers/weather.controller');
+
+    router.get('/', controller.index);
+    router.post('/', controller.search);
+
+    module.exports = router;
+    ```
+
+- Thêm route url và check phân quyền vào app.js
+    ```js
+    app.use('/weather', authMiddleware.requireAuth, weatherRoute);
+    ```
+
 ## 4. Implement Redis
 - Thêm đoạn code sau vào app.js
     ```js
