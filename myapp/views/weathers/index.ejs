@@ -20,19 +20,19 @@
     <% if(data10Day!=null && dataCurrent!=null){ %>
     <div>
         <h1 class="text-6xl font-bold"> <%=dataCurrent.name%></h1>
-        <span class="text-sm font-bold"><%=dataCurrent.sys.country%></span>
+        <span class="text-sm font-bold ml-10"><%=dataCurrent.sys.country%></span>
         <span class="text-sm">11/3, 12:14 AM</span>
-        <div class="flex items-center justify-start">
+        <div class="flex items-center justify-start ml-10">
             <img src="http://openweathermap.org/img/wn/<%=dataCurrent.weather[0].icon%>.png" />
             <span class="text-xl font-bold"><%=dataCurrent.weather[0].main%></span>
         </div>
-        <div class="flex items-center justify-start gap-2">
+        <div class="flex items-center justify-start gap-2 ml-10">
             <img class="h-4" src="/images/up.svg" />
             <span><%=convertFtoC(dataCurrent.main.temp_max)%>°</span>
             <img class="h-4" src="/images/down.svg" />
             <span><%=convertFtoC(dataCurrent.main.temp_min)%>°</span>
         </div>
-        <div class="flex items-center">
+        <div class="flex items-center ml-10">
             <span class="text-6xl font-bold">
                 <%=convertFtoC(dataCurrent.main.temp)%>°
             </span>
