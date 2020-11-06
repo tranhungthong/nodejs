@@ -11,7 +11,9 @@
 - [3.4. Thiết kế màn Book list](#3.4.-Thiết-kế-màn-Book-list)
 - [3.5. Màn hình edit và add book](#3.5.-Màn-hình-edit-và-add-book)
 
-[4. Usage](#4.-Usage)
+[4. Implement Redis](#4.-Implement-Redis)
+
+[5. Usage](#5.-Usage)
 
 ## Description
 
@@ -92,6 +94,8 @@ là một hệ thống dùng để lưu trữ dữ liệu dưới dạng Key - V
 
     ```
     $ npm install redis
+
+    Cài đặt Redis server trên máy tính: truy cập link sau để download bộ cài https://redis.io/download
     ``` 
 
 ## 2. Setting
@@ -1551,8 +1555,170 @@ Gồm các file dưới đây
 
     };
     ```
+## 4. Implement Redis
+- Thêm đoạn code sau vào app.js
+    ```js
+    require('./services/cache');
+    ```
+- Setup key Redis
+    
+    Trong file .env thêm một key: REDIS_URL=redis://localhost:6379
+- Đầu tiên cần biết truy vấn trong mongoose làm việc như nào
+    ```js
+    // truy vấn bình thường như này
+    const query = Person
+  .find({ occupation: /host/ })
+  .where('namelast')equals('Ghost')
+  .where('age')gt(17)lt(66)
+  .where('likes')in(['vaporizing', 'talking'])
+  .limit(10)
+  .sort('-occupation')
+  .select('name occupation')
 
-## 4. Usage
+  // Lúc này xác nhận xem là truy vấn này đã được thực hiện trong Redis hay chưa
+  // Thực tế truy vấn như này
+  query.exec(callback);
+  // rồi
+  query.then(result => console.log(result));
+  // rồi
+  const result = await query;
+
+  // Chúng ta có thể overrides để kiểm tra trước khi thực hiện câu truy vấn kiểu như sau
+  query.exec = async function(...params) {
+  // Kiểm tra xem truy vấn này đã được thực thi chưa
+  // Nếu có rồi thì lấy dữ liệu từ cache để trả về
+    const cache = await client.get('query key');
+    if (cache) return JSON.parse(cache);
+
+    // Nếu chưa có thi cho phép thức thi câu truy vấn
+    const result = await this.exec.apply(this, params)
+    // Sau đó lưu kết quả vào cache
+    client.set('query key', JSON.stringify(result));
+    return result;
+    }
+    ```
+- Dựa vào nội dung trên, tạo file services/cache.js để xử lý vấn đề này
+    ```js
+    const mongoose = require('mongoose');
+    const redis = require('redis');
+    const util = require('util');
+
+    const client = redis.createClient(process.env.REDIS_URL);
+    client.hget = util.promisify(client.hget);
+
+    // Overriding the Default Mongoose Exec Function
+    const exec = mongoose.Query.prototype.exec;
+
+    mongoose.Query.prototype.cache = function (options = {}) {
+        this.enableCache = true;
+        var hashKey = `${options.userid}_${options.page}`
+
+        if (options.input != null) {
+            this.key = `${hashKey}_${options.input}`
+        } else {
+            this.key = hashKey;
+        }
+
+        this.hashKey = JSON.stringify(hashKey || 'default');
+
+        return this;
+    };
+
+    // create new cache function on prototype
+    mongoose.Query.prototype.exec = async function () {
+        if (!this.enableCache) {
+            return exec.apply(this, arguments);
+        }
+
+        // set thời gian hết hạn là 600s
+        client.expire(this.hashKey, 600);
+
+        // lấy cache từ redis theo key
+        const cachedValue = await client.hget(this.hashKey, this.key);
+
+        // nếu tồn tại cache thì trả về data được lưu trong cache
+        if (cachedValue) {
+            const parsedCache = JSON.parse(cachedValue);
+
+            console.log('Data Source: Cache');
+
+            return Array.isArray(parsedCache)
+                ? parsedCache.map(doc => new this.model(doc))
+                : new this.model(parsedCache);
+        }
+
+        // Nếu không tồn tại cache, thực thi câu truy vấn hiện tại        
+        const result = await exec.apply(this, arguments);
+
+        // Lưu dữ liệu hiện tạo vào redis
+        client.hmset(this.hashKey, this.key, JSON.stringify(result));
+
+        console.log('Data Source: Database');
+        return result;
+    };
+
+
+    // module dùng để clear cache theo key
+    module.exports = {
+        clearCache(options) {
+            var hashKey = `${options.userid}_${options.page}`
+            console.log('Cache cleaned');
+            client.del(JSON.stringify(hashKey));
+        }
+    }
+    ```
+- Hiện tại mọi truy vấn đang được lưu vào cache, và bộ nhớ ram đang tăng lên, để xóa cache đang dùng chúng ta viết một module sau middlewares/cleanCache.js
+    ```js
+    const { clearCache } = require('../services/cache');
+
+    module.exports = {
+    async clearCacheByKey(req, res, next) {
+            const afterResponse = () => {
+            res.removeListener('finish', afterResponse);
+
+            if (res.statusCode < 400) clearCache({
+                userid: req.signedCookies.userid,
+                page: req.baseUrl.replace('/', '')
+            });
+            };
+
+            res.on('finish', afterResponse);
+            next();
+        },
+    };
+
+    ```
+
+- Implement vào function search book
+    ```js
+    // Trong function Book.find gọi function cache như sau
+    var data = await Book.find({
+        $and: [
+            {
+                $or: [
+                    { title: { $regex: new RegExp(input, "i") } },
+                    { author: { $regex: new RegExp(input, "i") } }
+                ]
+            }, {
+                is_del: false
+            }
+        ]
+
+    }).cache({
+        userid: req.signedCookies.userid,
+        page: 'book',
+        input: req.body.search
+    });
+    ```
+
+- Mỗi lần edit, add, update book cần phải xóa cache để hiển thị dữ liệu mới nhất lên màn hình. Trong file routes/book.route.js thêm module ClearCache như sau
+    ```js
+    const { clearCacheByKey } = require('../middlewares/cleanCache');
+    router.post('/add', upload.single('cover'), clearCacheByKey, controller.add);
+    router.post('/update', upload.single('cover'), clearCacheByKey, controller.update);
+    router.post('/delete', clearCacheByKey, controller.delete);
+    ```
+## 5. Usage
 - Sau khi clone code từ git chạy lệnh cài đặt các module cần thiết
 
 ```

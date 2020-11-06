@@ -6,9 +6,6 @@ var dateFormat = require('dateformat');
 
 var globals = require('../global');
 
-var _require = require('../services/cache'),
-    clearCache = _require.clearCache;
-
 module.exports.index = function _callee(req, res) {
   return regeneratorRuntime.async(function _callee$(_context) {
     while (1) {

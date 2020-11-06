@@ -1,7 +1,6 @@
 var Book = require('../models/book.model');
 var dateFormat = require('dateformat');
 var globals = require('../global')
-const { clearCache } = require('../services/cache');
 
 
 module.exports.index = async function (req, res) {
