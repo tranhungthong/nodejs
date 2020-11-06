@@ -146,7 +146,6 @@ module.exports.getABook = async function (req, res) {
 module.exports.search = async function (req, res) {
     // get data
     var input = '^.*' + req.body.search + '.*$';
-
     var data = await Book.find({
         $and: [
             {

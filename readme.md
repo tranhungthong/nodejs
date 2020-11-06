@@ -1,11 +1,24 @@
 # Nodejs training
+## MENU
+[1. Installing](#1.-Installing)
+
+[2. Setting](#2.-Setting)
+
+[3. Thiết kế màn hình](#3.-Thiết-kế-các-màn-hình)
+- [3.1 Thiết kế màn hình chính](#3.1.-Thiết-kế-màn-hình-chính)
+- [3.2. Thiết kế popup confirm](#3.2.-Thiết-kế-popup-confirm)
+- [3.3. Sửa lại màn hình login như dưới](#3.3.-Sửa-lại-màn-hình-login-như-dưới)
+- [3.4. Thiết kế màn Book list](#3.4.-Thiết-kế-màn-Book-list)
+- [3.5. Màn hình edit và add book](#3.5.-Màn-hình-edit-và-add-book)
+
+[4. Usage](#4.-Usage)
 
 ## Description
 
 Tài liệu này trình bày cách cài đặt các extention như Tailwindcss, dateformat, dotenv, ejs...
 . MongoDB, bố trí lại các thư mục, sửa chức năng login để connect với DB và code chức năng Book (CRUD)
 
-## Installing
+## 1. Installing
 - <strong>Tailwind</strong>: Framework css
     ```
     # Using npm
@@ -53,7 +66,7 @@ Tài liệu này trình bày cách cài đặt các extention như Tailwindcss, 
     ``` 
 
 
-## Setting
+## 2. Setting
 ### Tailwind
 
 - Thêm màu sắc vào Tailwind. Tạo file tailwind.config.js với nội dung sau
@@ -139,7 +152,7 @@ Tài liệu này trình bày cách cài đặt các extention như Tailwindcss, 
     $ npm run build-css
     ```
 
-## Thiết kế các màn hình
+## 3. Thiết kế các màn hình
 Mục này hướng dẫn cách tạo màn hình trong bài này. 
 Sửa lại mô hình code theo mô hình MVC
 - Tạo các thư mục views, controllers và models
@@ -193,7 +206,8 @@ Sửa lại mô hình code theo mô hình MVC
     })
     ```
 
-### 1. Thiết kế màn hình chính. Gồm các file dưới đây
+### 3.1. Thiết kế màn hình chính
+Gồm các file dưới đây
 - layouts/layout.ejs
     ```html
     <html>
@@ -335,7 +349,7 @@ Sửa lại mô hình code theo mô hình MVC
     </script>
     ```
 
-### Thiết kế popup confirm
+### 3.2. Thiết kế popup confirm
 - layouts/confirm.ejs
     ```html
     <!--Modal-->
@@ -433,7 +447,7 @@ Sửa lại mô hình code theo mô hình MVC
     </script>
     ```
 
-### 1. Sửa lại màn hình login như dưới
+### 3.3. Sửa lại màn hình login như dưới
 - views/user/login.ejs
     ```html
     <div class="flex justify-center items-center h-screen bg-gray-200 px-6">
@@ -569,7 +583,7 @@ Sửa lại mô hình code theo mô hình MVC
     app.use('/auth', loginRoute);
     ```
 
-### 2. Thiết kế màn Book list
+### 3.4. Thiết kế màn Book list
 - views/books/index.ejs
     ```html
     <!--Regular Datatables CSS-->
@@ -1072,7 +1086,7 @@ Sửa lại mô hình code theo mô hình MVC
     app.use('/book', authMiddleware.requireAuth, bookRoute);
     ```
 
-### 2. Màn hình edit và add book
+### 3.5. Màn hình edit và add book
 - views/books/book_dialog.ejs
     ```html
     <!--Modal-->
@@ -1510,7 +1524,7 @@ Sửa lại mô hình code theo mô hình MVC
     };
     ```
 
-## Usage
+## 4. Usage
 - Sau khi clone code từ git chạy lệnh cài đặt các module cần thiết
 
 ```
