@@ -56,5 +56,5 @@ var isAuth = function isAuth(req, res, next) {
 };
 
 module.exports = {
-  isAuth: isAuth
+  requireAuth: isAuth
 };

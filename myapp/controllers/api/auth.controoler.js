@@ -1,7 +1,6 @@
 var User = require('../../models/user.model');
 const jwtHelper = require('../../helpers/jwt.helper');
 var globals = require('../../global');
-const { use } = require('../../routes/auth.route');
 
 // thời gian sống của token
 const accessTokenLife = process.env.ACCESS_TOKEN_LIFE || "1h";
@@ -17,8 +16,6 @@ module.exports.apiLogin = async function (req, res) {
     var data = await User.find({ email: username, password: password });
 
     if (data.length > 0) {
-        console.log(data);
-
         const user = {
             _id: data[0]._id,
             name: data[0].name,
@@ -28,16 +25,17 @@ module.exports.apiLogin = async function (req, res) {
 
         // thuc hien tao ma token
         const accessToken = await jwtHelper.generateToken(user, accessTokenSecret, accessTokenLife);
-        console.log("accessToken", accessToken);
         user.accessToken = accessToken;
 
-        // tao refresh token
-        const refreshToken = await jwtHelper.generateToken(user, refreshTokenSecret, refreshTokenLife);
-        user.refreshToken = refreshToken;
-        console.log("refreshToken", refreshToken);
+        // // tao refresh token
+        // const refreshToken = await jwtHelper.generateToken(user, refreshTokenSecret, refreshTokenLife);
+        // user.refreshToken = refreshToken;
+        // console.log("refreshToken", refreshToken);
 
-        return res.status(200).json(user);
+        globals.success.data = user
+        return res.json(globals.success);
     }
 
-    return res.status(403).json({ message: "Invalid token" });
+    globals.error.message = "Invalid token";
+    return res.json(globals.error);
 };

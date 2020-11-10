@@ -12,6 +12,9 @@ var weatherRoute = require('./routes/weather.route');
 var authMiddleware = require('./middlewares/auth.middleware');
 
 var apiAuthRoute = require('./routes/api/auth.route');
+var apiBookRoute = require('./routes/api/book.route');
+var apiAuthMiddleware = require('./middlewares/jwtauth.middleware');
+
 
 
 app.set('layout', './layouts/layout')
@@ -39,9 +42,11 @@ app.get('/', authMiddleware.requireAuth, (req, res) => {
 });
 
 app.use('/auth', loginRoute);
-app.use('/api/auth', apiAuthRoute);
 app.use('/book', authMiddleware.requireAuth, bookRoute);
 app.use('/weather', authMiddleware.requireAuth, weatherRoute);
+
+app.use('/api/auth', apiAuthRoute);
+app.use('/api/book', apiAuthMiddleware.requireAuth, apiBookRoute);
 
 app.locals.convertFtoC = function (val) {
     return Math.round(val - 273.15);
