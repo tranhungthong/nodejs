@@ -1,4 +1,5 @@
 var User = require('../models/user.model');
+const jwtHelper=require('../helpers/jwt.helper');
 
 module.exports.login = function (req, res) {
     res.render('users/login', {

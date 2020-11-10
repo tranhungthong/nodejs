@@ -11,6 +11,9 @@ var bookRoute = require('./routes/book.route');
 var weatherRoute = require('./routes/weather.route');
 var authMiddleware = require('./middlewares/auth.middleware');
 
+var apiAuthRoute = require('./routes/api/auth.route');
+
+
 app.set('layout', './layouts/layout')
 app.use(expressLayouts)
 
@@ -36,6 +39,7 @@ app.get('/', authMiddleware.requireAuth, (req, res) => {
 });
 
 app.use('/auth', loginRoute);
+app.use('/api/auth', apiAuthRoute);
 app.use('/book', authMiddleware.requireAuth, bookRoute);
 app.use('/weather', authMiddleware.requireAuth, weatherRoute);
 
