@@ -31,7 +31,7 @@ module.exports.requireAuth = function _callee2(req, res, next) {
     while (1) {
       switch (_context2.prev = _context2.next) {
         case 0:
-          urlLogin = "".concat(process.env.AWS_COGNITO_DOMAIN_LOGIN, "?response_type=code&client_id=").concat(process.env.AWS_COGNITO_CLIENT_ID, "&redirect_uri=").concat(process.env.AWS_COGNITO_CALLBACK_URL);
+          urlLogin = "".concat(process.env.AWS_COGNITO_DOMAIN_LOGIN, "?response_type=code&client_id=").concat(process.env.AWS_COGNITO_CLIENT_ID, "&redirect_uri=").concat(process.env.AWS_COGNITO_CALLBACK_URL); // nếu chưa login thì redirect tới màn hình login của aws cognito
 
           if (req.signedCookies.access_token) {
             _context2.next = 4;
@@ -47,7 +47,8 @@ module.exports.requireAuth = function _callee2(req, res, next) {
           // https://cognito-idp.{Region}.amazonaws.com/{Poolid}/.well-known/jwks.json
           rawdata = fs.readFileSync('jwks.json');
           jwk = JSON.parse(rawdata);
-          pem = jwkToPem(jwk.keys[1]);
+          pem = jwkToPem(jwk.keys[1]); // kiem tra acces_token co đúng không
+
           jwt.verify(req.signedCookies.access_token, pem, {
             algorithms: ['RS256']
           }, function _callee(err, decodedToken) {
@@ -72,12 +73,16 @@ module.exports.requireAuth = function _callee2(req, res, next) {
                   case 4:
                     data = _context.sent;
 
+                    // Nếu lấy được access_token. Lưu vào cookie để sử dụng
                     if (data.data) {
                       res.cookie('access_token', data.data.access_token, {
                         signed: true
-                      });
+                      }); // cho phép chuyển tới controller
+
                       next();
                     } else {
+                      // Nếu refresh_token không sử dụng được
+                      // di chuyển tới màn hình login
                       res.redirect(urlLogin);
                     }
 
@@ -87,7 +92,7 @@ module.exports.requireAuth = function _callee2(req, res, next) {
 
                   case 8:
                     if (decodedToken) {
-                      console.log("decodedToken", decodedToken);
+                      // Nếu access_token hợp lệ. cho phép di chuyển tới action tiếp theo
                       next();
                     }
 
