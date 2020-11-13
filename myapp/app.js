@@ -9,6 +9,7 @@ const port = 3000;
 var loginRoute = require('./routes/auth.route');
 var bookRoute = require('./routes/book.route');
 var weatherRoute = require('./routes/weather.route');
+var cognitoRoute = require('./routes/cognito.route');
 var authMiddleware = require('./middlewares/auth.middleware');
 
 var apiAuthRoute = require('./routes/api/auth.route');
@@ -42,6 +43,7 @@ app.get('/', authMiddleware.requireAuth, (req, res) => {
 });
 
 app.use('/auth', loginRoute);
+app.use('/cognito', cognitoRoute);
 app.use('/book', authMiddleware.requireAuth, bookRoute);
 app.use('/weather', authMiddleware.requireAuth, weatherRoute);
 
