@@ -18,6 +18,7 @@ module.exports.postLogin = function (req, res) {
             res.cookie('userid', foundData[0]._id, {
                 signed: true
             });
+            
 
             res.redirect('/');
         }
